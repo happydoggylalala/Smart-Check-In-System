@@ -1,6 +1,7 @@
-import { getState, updateState, resetState, exportBackup, importBackup } from './state.js';
+import { getState, updateState, resetState, replaceState, exportBackup, importBackup } from './state.js';
 import { recomputeEarlyBirds } from './earlybird.js';
 import { sendTestEmail } from './email.js';
+import { buildDemoState } from './demoData.js';
 import { showToast, toDatetimeLocalValue, fromDatetimeLocalValue } from './utils.js';
 
 function loadFormFromState() {
@@ -82,6 +83,14 @@ function handleClearAll(onStateChanged) {
   onStateChanged && onStateChanged();
 }
 
+function handleLoadDemo(onStateChanged) {
+  if (!confirm('確定要載入示範資料嗎？這會覆蓋目前的所有資料！')) return;
+  replaceState(buildDemoState());
+  loadFormFromState();
+  showToast('已載入示範資料', 'success');
+  onStateChanged && onStateChanged();
+}
+
 export function initSettingsScreen({ onStateChanged }) {
   loadFormFromState();
 
@@ -112,4 +121,5 @@ export function initSettingsScreen({ onStateChanged }) {
   });
 
   document.getElementById('btn-clear-all').addEventListener('click', () => handleClearAll(onStateChanged));
+  document.getElementById('btn-load-demo').addEventListener('click', () => handleLoadDemo(onStateChanged));
 }
