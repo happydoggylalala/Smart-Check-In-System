@@ -1,0 +1,6 @@
+{
+  "name": "smart-checkin-system",
+  "private": true,
+  "type": "module",
+  "description": "純前端智慧報到系統，無需建置步驟，可用 npx serve . 或 python -m http.server 啟動"
+}
