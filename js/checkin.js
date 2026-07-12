@@ -232,6 +232,10 @@ export function initCheckinScreen({ onStateChanged }) {
       showToast('請輸入姓名', 'error');
       return;
     }
+    if (employeeId && !/^\d{6}$/.test(employeeId)) {
+      showToast('工號請輸入 6 位數字，或留空', 'error');
+      return;
+    }
     const now = nowIso();
     let addResult;
     updateState(state => {

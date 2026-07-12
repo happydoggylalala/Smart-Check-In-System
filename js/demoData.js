@@ -55,19 +55,19 @@ export function buildDemoState(nowMs = Date.now()) {
   }
 
   addPerson({
-    name: '王小明', employeeId: 'E001', email: 'ming@example.com', daysAgo: 10,
+    name: '王小明', employeeId: '100001', email: 'ming@example.com', daysAgo: 10,
     checkin: { checkedInAt: offsetIso(event.startTime, 4), status: 'on_time' }, emailStatus: 'sent',
   });
   addPerson({
-    name: '李小華', employeeId: 'E002', email: 'hua@example.com', daysAgo: 9,
+    name: '李小華', employeeId: '100002', email: 'hua@example.com', daysAgo: 9,
     checkin: { checkedInAt: offsetIso(event.startTime, 6), status: 'on_time' }, emailStatus: 'sent',
   });
   addPerson({
-    name: '陳大同', employeeId: 'E003', email: 'datong@example.com', daysAgo: 8,
+    name: '陳大同', employeeId: '100003', email: 'datong@example.com', daysAgo: 8,
     checkin: { checkedInAt: offsetIso(event.startTime, 17), status: 'late' }, emailStatus: 'skipped_not_configured',
   });
   const normalOut = addPerson({
-    name: '林美玲', employeeId: 'E004', email: 'meiling@example.com', daysAgo: 7,
+    name: '林美玲', employeeId: '100004', email: 'meiling@example.com', daysAgo: 7,
     checkin: {
       checkedInAt: offsetIso(event.startTime, 8), status: 'on_time',
       checkedOutAt: event.endTime, earlyLeave: false,
@@ -75,7 +75,7 @@ export function buildDemoState(nowMs = Date.now()) {
     emailStatus: 'sent',
   });
   addPerson({
-    name: '張家豪', employeeId: 'E005', email: 'jiahao@example.com', daysAgo: 6,
+    name: '張家豪', employeeId: '100005', email: 'jiahao@example.com', daysAgo: 6,
     checkin: {
       checkedInAt: offsetIso(event.startTime, 10), status: 'on_time',
       checkedOutAt: offsetIso(event.endTime, -20), earlyLeave: true,
@@ -83,15 +83,15 @@ export function buildDemoState(nowMs = Date.now()) {
     emailStatus: 'sent',
   });
   addPerson({
-    name: '黃詩涵', employeeId: 'E006', email: 'shihan@example.com', daysAgo: 5,
+    name: '黃詩涵', employeeId: '100006', email: 'shihan@example.com', daysAgo: 5,
     checkin: { checkedInAt: offsetIso(event.startTime, 19), status: 'late' }, emailStatus: 'skipped_not_configured',
   });
 
   // 尚未報到的名單，可在展示時現場搜尋並實際按下「報到」
-  addPerson({ name: '吳建志', employeeId: 'E007', email: 'jianzhi@example.com', daysAgo: 4 });
-  addPerson({ name: '周佳穎', employeeId: 'E008', email: 'jiaying@example.com', daysAgo: 3 });
-  addPerson({ name: '許志偉', employeeId: 'E009', email: 'zhiwei@example.com', daysAgo: 2 });
-  addPerson({ name: '蔡佩珊', employeeId: 'E010', email: 'peishan@example.com', daysAgo: 1 });
+  addPerson({ name: '吳建志', employeeId: '100007', email: 'jianzhi@example.com', daysAgo: 4 });
+  addPerson({ name: '周佳穎', employeeId: '100008', email: 'jiaying@example.com', daysAgo: 3 });
+  addPerson({ name: '許志偉', employeeId: '100009', email: 'zhiwei@example.com', daysAgo: 2 });
+  addPerson({ name: '蔡佩珊', employeeId: '100010', email: 'peishan@example.com', daysAgo: 1 });
 
   // 現場候補示範
   addPerson({

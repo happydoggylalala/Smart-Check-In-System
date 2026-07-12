@@ -33,7 +33,7 @@
       <button id="btn-open-walkin" class="btn-secondary">找不到？現場報到</button>
       <div id="walkin-form" class="walkin-form hidden">
         <input id="walkin-name" type="text" placeholder="姓名 *">
-        <input id="walkin-employeeid" type="text" placeholder="工號">
+        <input id="walkin-employeeid" type="text" placeholder="工號（6碼數字，選填）" maxlength="6" inputmode="numeric" pattern="\d{6}">
         <input id="walkin-email" type="email" placeholder="Email">
         <div class="form-actions">
           <button id="btn-walkin-submit" class="btn-primary">送出現場報到</button>
