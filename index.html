@@ -27,6 +27,13 @@
   <!-- ============ 報到 ============ -->
   <section id="screen-checkin" class="screen active">
     <h2 data-i18n="checkin.heading">報到</h2>
+
+    <div class="panel card-panel">
+      <h3 data-i18n="checkin.cardSectionTitle">刷卡報到</h3>
+      <input id="checkin-card-input" type="text" class="card-input" data-i18n-placeholder="checkin.cardPlaceholder" placeholder="請刷卡（或輸入工號後按 Enter）" autocomplete="off">
+      <p class="hint" data-i18n="checkin.cardHint">將讀卡機對準感應區，或直接輸入 6 碼工號後按 Enter 即可報到</p>
+    </div>
+
     <div class="panel">
       <input id="checkin-search" type="text" data-i18n-placeholder="checkin.searchPlaceholder" placeholder="輸入姓名或工號搜尋..." autocomplete="off">
       <div id="checkin-results" class="result-list"></div>

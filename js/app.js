@@ -1,5 +1,5 @@
 import { initNav, showScreen } from './nav.js';
-import { initCheckinScreen, reRenderSearch } from './checkin.js';
+import { initCheckinScreen, reRenderSearch, focusCardInput } from './checkin.js';
 import { initImportScreen } from './importRoster.js';
 import { initSettingsScreen } from './settingsScreen.js';
 import { initDashboardScreen, renderDashboard } from './dashboard.js';
@@ -32,6 +32,7 @@ function init() {
     if (id === 'screen-dashboard') renderDashboard();
     if (id === 'screen-grouping') renderGroupingBoard();
     if (id === 'screen-lottery') renderLotteryScreen();
+    if (id === 'screen-checkin') focusCardInput();
   });
 
   initCheckinScreen({ onStateChanged: renderAll });
@@ -45,6 +46,7 @@ function init() {
 
   showScreen('screen-checkin');
   renderAll();
+  focusCardInput();
 }
 
 document.addEventListener('DOMContentLoaded', init);

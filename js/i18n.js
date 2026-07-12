@@ -16,6 +16,10 @@ const dict = {
   'checkin.heading': { 'zh-TW': '報到', en: 'Check-in', 'zh-CN': '报到', ja: '受付' },
   'checkin.searchPlaceholder': { 'zh-TW': '輸入姓名或工號搜尋...', en: 'Search by name or employee ID...', 'zh-CN': '输入姓名或工号搜索...', ja: '氏名または社員番号で検索...' },
   'checkin.walkinToggle': { 'zh-TW': '找不到？現場報到', en: "Can't find them? Walk-in check-in", 'zh-CN': '找不到？现场报到', ja: '見つからない場合はその場で受付' },
+  'checkin.cardSectionTitle': { 'zh-TW': '刷卡報到', en: 'Card Check-in', 'zh-CN': '刷卡报到', ja: 'カード受付' },
+  'checkin.cardPlaceholder': { 'zh-TW': '請刷卡（或輸入工號後按 Enter）', en: 'Scan your card (or type employee ID and press Enter)', 'zh-CN': '请刷卡（或输入工号后按 Enter）', ja: 'カードをスキャン（または社員番号を入力しEnter）' },
+  'checkin.cardHint': { 'zh-TW': '將讀卡機對準感應區，或直接輸入 6 碼工號後按 Enter 即可報到', en: 'Tap your card on the reader, or type your 6-digit employee ID and press Enter to check in', 'zh-CN': '将读卡机对准感应区，或直接输入 6 位工号后按 Enter 即可报到', ja: 'カードリーダーにかざすか、6桁の社員番号を入力してEnterを押すと受付できます' },
+  'checkin.cardNotFound': { 'zh-TW': '找不到工號為 {{id}} 的人員，請確認卡片或改用下方搜尋', en: 'No one found with employee ID {{id}}. Please check the card or use search below', 'zh-CN': '找不到工号为 {{id}} 的人员，请确认卡片或改用下方搜索', ja: '社員番号 {{id}} の方が見つかりません。カードをご確認いただくか、下の検索をご利用ください' },
 
   'walkin.namePlaceholder': { 'zh-TW': '姓名 *', en: 'Name *', 'zh-CN': '姓名 *', ja: '氏名 *' },
   'walkin.employeeIdPlaceholder': { 'zh-TW': '工號（6碼數字，選填）', en: 'Employee ID (6 digits, optional)', 'zh-CN': '工号（6位数字，选填）', ja: '社員番号（6桁の数字、任意）' },

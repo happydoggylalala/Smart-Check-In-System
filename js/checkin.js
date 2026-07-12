@@ -194,13 +194,40 @@ export function reRenderSearch() {
   renderResults(searchRoster(lastQuery), lastQuery);
 }
 
+export function focusCardInput() {
+  const el = document.getElementById('checkin-card-input');
+  if (el) el.focus();
+}
+
+async function handleCardScan(rawValue, onStateChanged) {
+  const cardId = rawValue.replace(/[\r\n]/g, '').trim();
+  if (!cardId) return;
+  const person = getState().roster.find(p => p.employeeId === cardId);
+  if (!person) {
+    showToast(t('checkin.cardNotFound', { id: cardId }), 'error');
+    return;
+  }
+  await doCheckin(person.id, onStateChanged);
+}
+
 export function initCheckinScreen({ onStateChanged }) {
   const searchInput = document.getElementById('checkin-search');
   const resultsContainer = document.getElementById('checkin-results');
+  const cardInput = document.getElementById('checkin-card-input');
   const walkinToggle = document.getElementById('btn-open-walkin');
   const walkinForm = document.getElementById('walkin-form');
   const walkinCancel = document.getElementById('btn-walkin-cancel');
   const walkinSubmit = document.getElementById('btn-walkin-submit');
+
+  cardInput.addEventListener('keydown', async e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const value = cardInput.value;
+    cardInput.value = '';
+    await handleCardScan(value, onStateChanged);
+    cardInput.focus();
+  });
+  cardInput.focus();
 
   const runSearch = debounce(() => {
     lastQuery = searchInput.value;

@@ -102,6 +102,18 @@ input[type="text"], input[type="email"], input[type="number"], input[type="datet
 
 #checkin-search, #dashboard-search { width: 100%; padding: 12px; font-size: 16px; }
 
+.card-panel { border-color: var(--primary); background: var(--panel-bg); }
+.card-panel h3 { margin-top: 0; }
+.card-input {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  letter-spacing: 1px;
+  border: 2px solid var(--primary);
+  text-align: center;
+}
+.card-input:focus { outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); }
+
 .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
   padding: 10px 16px;
   border-radius: 6px;
