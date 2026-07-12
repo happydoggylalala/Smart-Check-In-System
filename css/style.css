@@ -43,7 +43,16 @@ body {
   top: 0;
   z-index: 10;
 }
-.topbar h1 { margin: 0 0 10px; font-size: 20px; }
+.topbar-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.topbar h1 { margin: 0; font-size: 20px; }
+.lang-switcher {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
 .tab-btn {
   padding: 8px 14px;

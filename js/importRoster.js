@@ -1,13 +1,14 @@
 import { getState, updateState } from './state.js';
 import { createPerson } from './models.js';
 import { recomputeEarlyBirds } from './earlybird.js';
+import { t } from './i18n.js';
 import { escapeHtml, showToast } from './utils.js';
 
 const HEADER_ALIASES = {
-  name: ['姓名', '名字', 'name', 'Name'],
-  employeeId: ['工號', '員工編號', '員工工號', 'employeeId', 'employee_id', 'EmployeeId', 'ID'],
-  email: ['email', 'Email', 'E-mail', 'e-mail', '信箱', '電子郵件'],
-  registeredAt: ['報名時間', '登記時間', 'registeredAt', 'registered_at', '報名日期'],
+  name: ['姓名', '名字', '氏名', 'name', 'Name'],
+  employeeId: ['工號', '員工編號', '員工工號', '工号', '社員番号', 'employeeId', 'employee_id', 'EmployeeId', 'ID'],
+  email: ['email', 'Email', 'E-mail', 'e-mail', '信箱', '電子郵件', '邮箱', 'メール', 'メールアドレス'],
+  registeredAt: ['報名時間', '登記時間', '报名时间', '登记时间', '登録日時', 'registeredAt', 'registered_at', '報名日期'],
 };
 
 let parsedRows = [];
@@ -37,16 +38,16 @@ function renderPreview() {
   }
   const headers = Object.keys(parsedRows[0]);
   const fields = [
-    { key: 'name', label: '姓名', required: true },
-    { key: 'employeeId', label: '工號', required: false },
-    { key: 'email', label: 'Email', required: false },
-    { key: 'registeredAt', label: '報名時間', required: false },
+    { key: 'name', label: t('import.fieldName'), required: true },
+    { key: 'employeeId', label: t('import.fieldEmployeeId'), required: false },
+    { key: 'email', label: t('import.fieldEmail'), required: false },
+    { key: 'registeredAt', label: t('import.fieldRegisteredAt'), required: false },
   ];
 
   const mappingHtml = fields.map(f => `
     <label>${f.label}${f.required ? ' *' : ''}
       <select data-map-field="${f.key}">
-        <option value="">(不對應)</option>
+        <option value="">${t('import.noMap')}</option>
         ${headers.map(h => `<option value="${escapeHtml(h)}" ${columnMapping[f.key] === h ? 'selected' : ''}>${escapeHtml(h)}</option>`).join('')}
       </select>
     </label>
@@ -62,12 +63,12 @@ function renderPreview() {
         </tbody>
       </table>
     </div>
-    <p class="hint">共 ${parsedRows.length} 筆資料，僅預覽前 5 筆</p>
+    <p class="hint">${t('import.previewCount', { count: parsedRows.length })}</p>
   `;
 
   container.innerHTML = `
     <div class="panel">
-      <h3>欄位對應</h3>
+      <h3>${t('import.mappingHeading')}</h3>
       ${mappingHtml}
     </div>
     ${tableHtml}
@@ -88,7 +89,7 @@ function handleFile(file) {
     try {
       parsedRows = parseArrayBuffer(reader.result);
       if (parsedRows.length === 0) {
-        showToast('檔案沒有資料', 'error');
+        showToast(t('import.noData'), 'error');
         return;
       }
       const headers = Object.keys(parsedRows[0]);
@@ -100,7 +101,7 @@ function handleFile(file) {
       };
       renderPreview();
     } catch (err) {
-      showToast('檔案解析失敗：' + err.message, 'error');
+      showToast(t('import.parseFail', { msg: err.message }), 'error');
     }
   };
   reader.readAsArrayBuffer(file);
@@ -108,7 +109,7 @@ function handleFile(file) {
 
 function confirmImport(onImported) {
   if (!columnMapping.name) {
-    showToast('請至少對應「姓名」欄位', 'error');
+    showToast(t('import.needName'), 'error');
     return;
   }
   let count = 0;
@@ -129,7 +130,7 @@ function confirmImport(onImported) {
     }
     recomputeEarlyBirds(state);
   });
-  showToast(`成功匯入 ${count} 筆名單`, 'success');
+  showToast(t('import.successCount', { count }), 'success');
   parsedRows = [];
   columnMapping = { name: '', employeeId: '', email: '', registeredAt: '' };
   document.getElementById('import-file').value = '';

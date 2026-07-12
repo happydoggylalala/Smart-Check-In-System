@@ -1,4 +1,5 @@
 import { getState, updateState } from './state.js';
+import { t } from './i18n.js';
 import { secureRandomInt, escapeHtml, showToast, formatDateTime } from './utils.js';
 
 function getLotteryPool(state, excludeWinners) {
@@ -8,7 +9,7 @@ function getLotteryPool(state, excludeWinners) {
 function renderPoolCount() {
   const excludeWinners = document.getElementById('lottery-exclude-winners').checked;
   const pool = getLotteryPool(getState(), excludeWinners);
-  document.getElementById('lottery-pool-count').textContent = pool.length;
+  document.getElementById('lottery-pool-label').textContent = t('lottery.poolLabel', { count: pool.length });
 }
 
 function renderHistory() {
@@ -19,7 +20,7 @@ function renderHistory() {
     const p = byId[id];
     if (!p) return '';
     return `<li>${escapeHtml(p.name)}（${formatDateTime(p.lottery.wonAt)}）</li>`;
-  }).join('') || '<li class="hint">尚無得獎紀錄</li>';
+  }).join('') || `<li class="hint">${t('lottery.noHistory')}</li>`;
 }
 
 function drawWinner() {
@@ -27,7 +28,7 @@ function drawWinner() {
   const state = getState();
   const pool = getLotteryPool(state, excludeWinners);
   if (pool.length === 0) {
-    showToast('目前沒有可抽獎的人員', 'error');
+    showToast(t('lottery.noPool'), 'error');
     return;
   }
   const idx = secureRandomInt(pool.length);
@@ -43,15 +44,15 @@ function drawWinner() {
   const winner = getState().roster.find(p => p.id === winnerId);
   const banner = document.getElementById('lottery-winner-banner');
   banner.classList.remove('hidden');
-  banner.innerHTML = `🎉 恭喜 ${escapeHtml(winner.name)}！` +
-    (winner.group.groupIndex ? `<br><span style="font-size:18px">第 ${winner.group.groupIndex} 組 第 ${winner.group.seatIndex} 號</span>` : '');
+  banner.innerHTML = t('lottery.congrats', { name: escapeHtml(winner.name) }) +
+    (winner.group.groupIndex ? `<br><span style="font-size:18px">${t('lottery.winnerSeat', { group: winner.group.groupIndex, seat: winner.group.seatIndex })}</span>` : '');
 
   renderPoolCount();
   renderHistory();
 }
 
 function resetLottery() {
-  if (!confirm('確定要重置所有得獎名單嗎？此動作無法復原。')) return;
+  if (!confirm(t('lottery.confirmReset'))) return;
   updateState(s => {
     s.roster.forEach(p => { p.lottery.won = false; p.lottery.wonAt = null; });
     s.lotteryWinnersHistory = [];
@@ -59,7 +60,7 @@ function resetLottery() {
   document.getElementById('lottery-winner-banner').classList.add('hidden');
   renderPoolCount();
   renderHistory();
-  showToast('已重置得獎名單', 'success');
+  showToast(t('lottery.resetDone'), 'success');
 }
 
 export function renderLotteryScreen() {

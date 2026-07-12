@@ -1,14 +1,7 @@
 import { getState } from './state.js';
 import { computeDisplayStatus, computeEarlyLeave, statusSymbol, statusLabel } from './checkin.js';
+import { t } from './i18n.js';
 import { escapeHtml, formatDateTime, nowIso } from './utils.js';
-
-const EMAIL_STATUS_TEXT = {
-  not_sent: '-',
-  sent: '已寄出',
-  failed: '失敗',
-  skipped_no_email: '無Email',
-  skipped_not_configured: '未設定',
-};
 
 function computeStats(state) {
   const now = nowIso();
@@ -28,17 +21,17 @@ export function renderStatTiles() {
   const stats = computeStats(state);
   const capacity = Number(state.event.capacity) || 0;
   const tiles = [
-    { label: '總名單', num: stats.total },
-    { label: '已報到', num: stats.checkedIn },
-    { label: '準時', num: stats.on_time },
-    { label: '遲到', num: stats.late },
-    { label: '未到', num: stats.absent },
-    { label: '早退', num: stats.earlyLeave },
-    { label: '現場候補', num: stats.waitlisted },
-    { label: '容量使用率', num: capacity > 0 ? `${Math.round((stats.checkedIn / capacity) * 100)}%` : '-' },
+    { label: t('dashboard.stat.total'), num: stats.total },
+    { label: t('dashboard.stat.checkedIn'), num: stats.checkedIn },
+    { label: t('dashboard.stat.onTime'), num: stats.on_time },
+    { label: t('dashboard.stat.late'), num: stats.late },
+    { label: t('dashboard.stat.absent'), num: stats.absent },
+    { label: t('dashboard.stat.earlyLeave'), num: stats.earlyLeave },
+    { label: t('dashboard.stat.waitlisted'), num: stats.waitlisted },
+    { label: t('dashboard.stat.capacityUsage'), num: capacity > 0 ? `${Math.round((stats.checkedIn / capacity) * 100)}%` : '-' },
   ];
-  document.getElementById('stat-tiles').innerHTML = tiles.map(t => `
-    <div class="stat-tile"><div class="num">${t.num}</div><div class="label">${t.label}</div></div>
+  document.getElementById('stat-tiles').innerHTML = tiles.map(tile => `
+    <div class="stat-tile"><div class="num">${tile.num}</div><div class="label">${tile.label}</div></div>
   `).join('');
 }
 
@@ -68,16 +61,16 @@ export function renderDashboardTable() {
         <td>${escapeHtml(p.name)}</td>
         <td>${escapeHtml(p.employeeId || '')}</td>
         <td>${escapeHtml(p.email || '')}</td>
-        <td>${p.isEarlyBird ? '早鳥' : ''}</td>
-        <td>${p.checkin.waitlisted ? '候補' : ''}</td>
-        <td>${p.group.groupIndex ? `第${p.group.groupIndex}組 ${p.group.seatIndex}號` : ''}</td>
+        <td>${p.isEarlyBird ? t('dashboard.earlybirdMark') : ''}</td>
+        <td>${p.checkin.waitlisted ? t('dashboard.waitlistMark') : ''}</td>
+        <td>${p.group.groupIndex ? t('dashboard.groupSeatCell', { group: p.group.groupIndex, seat: p.group.seatIndex }) : ''}</td>
         <td>${formatDateTime(p.checkin.checkedInAt)}</td>
         <td>${formatDateTime(p.checkin.checkedOutAt)}</td>
-        <td>${EMAIL_STATUS_TEXT[p.emailStatus.status] || p.emailStatus.status}</td>
-        <td>${p.lottery.won ? '🎉 中獎' : ''}</td>
+        <td>${t(`dashboard.emailStatus.${p.emailStatus.status}`)}</td>
+        <td>${p.lottery.won ? t('dashboard.lotteryWonMark') : ''}</td>
       </tr>
     `;
-  }).join('') || '<tr><td colspan="11" class="hint">沒有符合條件的資料</td></tr>';
+  }).join('') || `<tr><td colspan="11" class="hint">${t('dashboard.noRows')}</td></tr>`;
 }
 
 export function renderDashboard() {

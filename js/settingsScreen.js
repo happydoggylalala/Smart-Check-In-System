@@ -2,6 +2,7 @@ import { getState, updateState, resetState, replaceState, exportBackup, importBa
 import { recomputeEarlyBirds } from './earlybird.js';
 import { sendTestEmail } from './email.js';
 import { buildDemoState } from './demoData.js';
+import { t } from './i18n.js';
 import { showToast, toDatetimeLocalValue, fromDatetimeLocalValue } from './utils.js';
 
 function loadFormFromState() {
@@ -42,7 +43,7 @@ function saveFormToState(onStateChanged) {
     state.event.emailJs.handoutLink = document.getElementById('set-email-link').value.trim();
     recomputeEarlyBirds(state);
   });
-  showToast('設定已儲存', 'success');
+  showToast(t('settings.savedToast'), 'success');
   const hint = document.getElementById('settings-saved-hint');
   hint.classList.remove('hidden');
   setTimeout(() => hint.classList.add('hidden'), 2000);
@@ -66,28 +67,28 @@ function handleBackupImport(file, onStateChanged) {
     try {
       importBackup(reader.result);
       loadFormFromState();
-      showToast('備份已還原', 'success');
+      showToast(t('settings.restoreDone'), 'success');
       onStateChanged && onStateChanged();
     } catch (err) {
-      showToast('還原失敗：' + err.message, 'error');
+      showToast(t('settings.restoreFail', { msg: err.message }), 'error');
     }
   };
   reader.readAsText(file);
 }
 
 function handleClearAll(onStateChanged) {
-  if (!confirm('確定要清除所有資料嗎？此動作無法復原！')) return;
+  if (!confirm(t('settings.confirmClearAll'))) return;
   resetState();
   loadFormFromState();
-  showToast('已清除所有資料', 'success');
+  showToast(t('settings.clearedToast'), 'success');
   onStateChanged && onStateChanged();
 }
 
 function handleLoadDemo(onStateChanged) {
-  if (!confirm('確定要載入示範資料嗎？這會覆蓋目前的所有資料！')) return;
+  if (!confirm(t('settings.confirmLoadDemo'))) return;
   replaceState(buildDemoState());
   loadFormFromState();
-  showToast('已載入示範資料', 'success');
+  showToast(t('settings.demoLoadedToast'), 'success');
   onStateChanged && onStateChanged();
 }
 
@@ -109,8 +110,8 @@ export function initSettingsScreen({ onStateChanged }) {
       name: document.getElementById('set-name').value.trim(),
     };
     const result = await sendTestEmail(draftEvent, addr);
-    if (result.ok) showToast('測試郵件已送出，請檢查信箱', 'success');
-    else showToast('寄送失敗：' + result.error, 'error');
+    if (result.ok) showToast(t('settings.testMailSent'), 'success');
+    else showToast(t('settings.testMailFail', { msg: result.error }), 'error');
   });
 
   document.getElementById('btn-backup-export').addEventListener('click', handleBackupExport);

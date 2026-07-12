@@ -1,4 +1,5 @@
 import { getState } from './state.js';
+import { t } from './i18n.js';
 import { escapeHtml } from './utils.js';
 
 export function assignGroupSeat(person, state) {
@@ -27,14 +28,14 @@ export function renderGroupingBoard() {
 
   board.innerHTML = groups.map((members, idx) => `
     <div class="group-card">
-      <h4>第 ${idx + 1} 組（${members.length}/${groupSize} 人）</h4>
+      <h4>${t('grouping.groupCard', { idx: idx + 1, count: members.length, size: groupSize })}</h4>
       <ul>
         ${members.map(p => `
           <li>
-            第 ${p.group.seatIndex} 號 — ${escapeHtml(p.name)}
-            ${p.group.seatIndex > groupSize ? '<span class="badge badge-overflow">超出原座位規劃</span>' : ''}
+            ${t('grouping.seatLine', { seat: p.group.seatIndex, name: escapeHtml(p.name) })}
+            ${p.group.seatIndex > groupSize ? `<span class="badge badge-overflow">${t('badge.overflow')}</span>` : ''}
           </li>
-        `).join('') || '<li class="hint">尚無成員</li>'}
+        `).join('') || `<li class="hint">${t('grouping.noMembers')}</li>`}
       </ul>
     </div>
   `).join('');

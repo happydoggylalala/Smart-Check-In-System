@@ -1,4 +1,5 @@
 import { createInitialState } from './models.js';
+import { t } from './i18n.js';
 
 const STORAGE_KEY = 'smartCheckin.v1';
 
@@ -47,7 +48,7 @@ export function exportBackup() {
 export function importBackup(jsonText) {
   const parsed = JSON.parse(jsonText);
   if (!parsed || parsed.schemaVersion !== 1 || !Array.isArray(parsed.roster)) {
-    throw new Error('備份檔格式不正確');
+    throw new Error(t('state.errBadBackup'));
   }
   replaceState(parsed);
 }
