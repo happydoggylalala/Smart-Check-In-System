@@ -58,6 +58,8 @@ export function createPerson({ name, employeeId = '', email = '', department = '
     registeredAt: registeredAt || nowIso(),
     source,
     isEarlyBird: false,
+    earlyBirdGranted: false,
+    earlyBirdGrantedAt: null,
     onLeave: false,
     checkin: {
       checkedInAt: null,

@@ -12,6 +12,7 @@ function buildExportRows(event) {
     [t('export.status')]: p.onLeave ? t('status.on_leave') : statusLabel(computeDisplayStatus(p, event, now)),
     [t('export.earlyLeave')]: computeEarlyLeave(p, event) ? t('export.yes') : '',
     [t('export.earlybird')]: p.isEarlyBird ? t('export.yes') : '',
+    [t('earlybirdPage.grantStatusCol')]: p.earlyBirdGranted ? t('export.yes') : '',
     [t('export.waitlist')]: p.checkin.waitlisted ? t('export.yes') : '',
     [t('export.group')]: p.group.groupIndex || '',
     [t('export.seat')]: p.group.seatIndex || '',

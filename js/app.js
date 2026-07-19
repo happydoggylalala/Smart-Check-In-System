@@ -11,6 +11,7 @@ import { initSurveyScreen, refreshSurveyScreen } from './surveyScreen.js';
 import { applyStaticTranslations } from './i18n.js';
 
 function renderAll() {
+  refreshCheckinScreen();
   refreshReportsScreen();
   refreshHistoryScreen();
   refreshEarlybirdScreen();
@@ -24,7 +25,6 @@ function renderAllForLangSwitch() {
   renderUserBadge();
   refreshSidebar();
   refreshEventsScreen();
-  refreshCheckinScreen();
   renderAll();
 }
 
@@ -33,6 +33,7 @@ function init() {
   initTopHeader({ onLangSwitch: renderAllForLangSwitch });
   initSidebar({
     onNavigate: id => {
+      if (id === 'screen-checkin') refreshCheckinScreen();
       if (id === 'screen-reports') refreshReportsScreen();
       if (id === 'screen-history') refreshHistoryScreen();
       if (id === 'screen-earlybird') refreshEarlybirdScreen();

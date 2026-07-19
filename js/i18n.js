@@ -369,6 +369,13 @@ const dict = {
   'earlybirdPage.desc': { 'zh-TW': '依報名時間排序前 N 名，且須準時報到才取得早鳥資格。', en: 'The earliest N registrants qualify for early-bird only if they also check in on time.', 'zh-CN': '依报名时间排序前 N 名，且须准时报到才取得早鸟资格。', ja: '登録が早い上位N名のうち、時間通りに受付した方のみ早割対象です。' },
   'earlybirdPage.countLabel': { 'zh-TW': '早鳥名額：前 {{n}} 名', en: 'Early bird quota: top {{n}}', 'zh-CN': '早鸟名额：前 {{n}} 名', ja: '早割枠：上位{{n}}名' },
   'earlybirdPage.notEnabled': { 'zh-TW': '此活動尚未啟用早鳥福利功能', en: 'This event has not enabled Early Bird', 'zh-CN': '此活动尚未启用早鸟福利功能', ja: 'このイベントでは早割特典が無効です' },
+  'earlybirdPage.grantBtn': { 'zh-TW': '發放', en: 'Grant', 'zh-CN': '发放', ja: '付与' },
+  'earlybirdPage.grantAllBtn': { 'zh-TW': '全部發放', en: 'Grant All', 'zh-CN': '全部发放', ja: '全員に付与' },
+  'earlybirdPage.grantedMark': { 'zh-TW': '已發放', en: 'Granted', 'zh-CN': '已发放', ja: '付与済み' },
+  'earlybirdPage.grantStatusCol': { 'zh-TW': '福利發放', en: 'Reward Status', 'zh-CN': '福利发放', ja: '特典付与状況' },
+  'earlybirdPage.grantedSummary': { 'zh-TW': '已發放 {{granted}} / {{eligible}} 人', en: 'Granted {{granted}} / {{eligible}}', 'zh-CN': '已发放 {{granted}} / {{eligible}} 人', ja: '付与済み {{granted}} / {{eligible}}名' },
+  'earlybirdPage.grantedAllToast': { 'zh-TW': '已發放給 {{count}} 人', en: 'Granted to {{count}} people', 'zh-CN': '已发放给 {{count}} 人', ja: '{{count}}名に付与しました' },
+  'earlybirdPage.noneToGrant': { 'zh-TW': '目前沒有待發放的早鳥名額', en: 'No pending early bird rewards to grant', 'zh-CN': '目前没有待发放的早鸟名额', ja: '付与待ちの早割特典はありません' },
   'earlybirdPage.registeredAtCol': { 'zh-TW': '報名時間', en: 'Registered at', 'zh-CN': '报名时间', ja: '登録日時' },
 
   // ---- 活動抽獎頁 ----
