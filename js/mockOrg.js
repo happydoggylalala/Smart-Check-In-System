@@ -2,8 +2,8 @@
 // 這裡的內容只是為了讓介面看起來跟企業內部系統一樣完整，不代表任何真實連線。
 
 export const MOCK_USER = {
-  name: 'Alex Wang',
-  initials: 'AW',
+  name: 'Winnie Chen',
+  initials: 'WC',
 };
 
 export const MOCK_CONNECTION_STATUS = {
