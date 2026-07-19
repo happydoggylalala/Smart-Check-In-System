@@ -7,178 +7,321 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-row">
-    <h1 data-i18n="app.title">智慧報到系統</h1>
-    <select id="lang-switcher" class="lang-switcher"></select>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="sidebar-logo">E</span>
+    <div>
+      <strong data-i18n="sidebar.brand">智慧報到系統</strong>
+      <div class="sidebar-brand-sub" data-i18n="sidebar.brandSubtitle">維運控制台</div>
+    </div>
   </div>
-  <nav class="tabs">
-    <button data-target="screen-checkin" class="tab-btn active" data-i18n="nav.checkin">報到</button>
-    <button data-target="screen-dashboard" class="tab-btn" data-i18n="nav.dashboard">儀表板</button>
-    <button data-target="screen-grouping" class="tab-btn" data-i18n="nav.grouping">分組座位</button>
-    <button data-target="screen-lottery" class="tab-btn" data-i18n="nav.lottery">抽獎</button>
-    <button data-target="screen-import" class="tab-btn" data-i18n="nav.import">名單匯入</button>
-    <button data-target="screen-settings" class="tab-btn" data-i18n="nav.settings">設定</button>
-  </nav>
-</header>
+  <nav id="sidebar-nav" class="sidebar-nav"></nav>
+  <div id="sidebar-status" class="sidebar-status"></div>
+</aside>
 
-<main>
-
-  <!-- ============ 報到 ============ -->
-  <section id="screen-checkin" class="screen active">
-    <h2 data-i18n="checkin.heading">報到</h2>
-
-    <div class="panel card-panel">
-      <h3 data-i18n="checkin.cardSectionTitle">刷卡報到</h3>
-      <input id="checkin-card-input" type="text" class="card-input" data-i18n-placeholder="checkin.cardPlaceholder" placeholder="請刷卡（或輸入工號後按 Enter）" autocomplete="off">
-      <p class="hint" data-i18n="checkin.cardHint">將讀卡機對準感應區，或直接輸入 6 碼工號後按 Enter 即可報到</p>
+<div class="main-wrap">
+  <header class="topheader">
+    <div>
+      <strong data-i18n="topheader.title">智慧報到系統</strong>
+      <div class="hint" data-i18n="topheader.subtitle">企業活動智慧報到平台</div>
     </div>
-
-    <div class="panel">
-      <input id="checkin-search" type="text" data-i18n-placeholder="checkin.searchPlaceholder" placeholder="輸入姓名或工號搜尋..." autocomplete="off">
-      <div id="checkin-results" class="result-list"></div>
+    <div class="topheader-right">
+      <select id="lang-switcher" class="lang-switcher"></select>
+      <div id="user-badge" class="user-badge"></div>
     </div>
+  </header>
 
-    <div class="panel">
-      <button id="btn-open-walkin" class="btn-secondary" data-i18n="checkin.walkinToggle">找不到？現場報到</button>
-      <div id="walkin-form" class="walkin-form hidden">
-        <input id="walkin-name" type="text" data-i18n-placeholder="walkin.namePlaceholder" placeholder="姓名 *">
-        <input id="walkin-employeeid" type="text" data-i18n-placeholder="walkin.employeeIdPlaceholder" placeholder="工號（6碼數字，選填）" maxlength="6" inputmode="numeric" pattern="\d{6}">
-        <input id="walkin-email" type="email" data-i18n-placeholder="walkin.emailPlaceholder" placeholder="Email">
-        <div class="form-actions">
-          <button id="btn-walkin-submit" class="btn-primary" data-i18n="walkin.submit">送出現場報到</button>
-          <button id="btn-walkin-cancel" class="btn-ghost" data-i18n="walkin.cancel">取消</button>
+  <main>
+
+    <!-- ============ 活動管理 ============ -->
+    <section id="screen-events" class="screen">
+      <div class="page-eyebrow" data-i18n="events.eyebrow">EVENT MANAGEMENT</div>
+      <h1 data-i18n="events.heading">活動管理</h1>
+      <p class="page-desc" data-i18n="events.desc">新增自建活動、匯入 LMS 學習活動，並彈性設定每場活動所需功能。</p>
+
+      <div class="segmented-toggle" id="events-view-toggle">
+        <button class="active" data-view="browse" data-i18n="events.browseTab">瀏覽現有活動</button>
+        <button data-view="create" data-i18n="events.createTab">新增活動</button>
+      </div>
+
+      <div id="events-browse-view">
+        <div class="filter-toolbar">
+          <input id="events-search" type="text" data-i18n-placeholder="eventPicker.searchPlaceholder" placeholder="搜尋活動名稱">
+          <select id="events-filter-source">
+            <option value="" data-i18n="eventPicker.filterAllSources">所有來源</option>
+            <option value="lms" data-i18n="eventSource.lms">LMS 活動</option>
+            <option value="self" data-i18n="eventSource.self">自建活動</option>
+          </select>
+          <select id="events-filter-type">
+            <option value="" data-i18n="eventPicker.filterAllTypes">所有類型</option>
+            <option value="leadership" data-i18n="eventType.leadership">領導管理</option>
+            <option value="digital_skill" data-i18n="eventType.digital_skill">數位技能</option>
+            <option value="compliance" data-i18n="eventType.compliance">法規遵循</option>
+            <option value="other" data-i18n="eventType.other">其他</option>
+          </select>
+          <select id="events-filter-status">
+            <option value="" data-i18n="eventPicker.filterAllStatuses">所有狀態</option>
+            <option value="ongoing" data-i18n="eventStatus.ongoing">進行中</option>
+            <option value="upcoming" data-i18n="eventStatus.upcoming">即將開始</option>
+            <option value="ended" data-i18n="eventStatus.ended">已結束</option>
+          </select>
+        </div>
+        <div id="events-list" class="event-card-list"></div>
+      </div>
+
+      <div id="events-create-view" class="hidden">
+        <div id="create-source-step" class="option-card-row">
+          <button class="option-card" id="option-self">
+            <div class="option-card-num">01</div>
+            <h2 data-i18n="events.optionSelf">自建活動</h2>
+            <p data-i18n="events.optionSelfDesc">自行填寫活動資料、匯入名單並設定需要的功能。</p>
+          </button>
+          <button class="option-card" id="option-lms">
+            <div class="option-card-num">02</div>
+            <h2 data-i18n="events.optionLms">從 LMS 選擇</h2>
+            <p data-i18n="events.optionLmsDesc">搜尋公司既有學習活動並帶入唯讀設定。</p>
+          </button>
+        </div>
+
+        <div id="lms-picker" class="panel hidden">
+          <h3 data-i18n="events.lmsPickerHeading">選擇 LMS 課程</h3>
+          <div id="lms-course-list" class="lms-course-list"></div>
+        </div>
+
+        <form id="event-form" class="hidden">
+          <div class="panel">
+            <div class="section-heading"><span class="step-num">01</span><div><h3 data-i18n="events.basicInfo">基本資料</h3><p data-i18n="events.basicInfoDesc">自行填寫活動資料、匯入名單並設定需要的功能。</p></div></div>
+            <label><span data-i18n="events.fieldName">活動名稱 *</span><input id="ef-name" type="text" required></label>
+            <div class="form-grid">
+              <label><span data-i18n="events.fieldOrganizer">主辦單位 *</span><input id="ef-organizer" type="text" required></label>
+              <label><span data-i18n="events.fieldCapacity">人數上限</span><input id="ef-capacity" type="number" min="1" value="40"></label>
+            </div>
+            <div class="form-grid">
+              <label><span data-i18n="events.fieldDate">活動日期</span><input id="ef-date" type="date"></label>
+              <label><span data-i18n="events.fieldStartTime">開始時間</span><input id="ef-start" type="time"></label>
+              <label><span data-i18n="events.fieldEndTime">結束時間</span><input id="ef-end" type="time"></label>
+            </div>
+            <label><span data-i18n="events.fieldLocation">活動地點 *</span><input id="ef-location" type="text" required></label>
+            <div class="form-grid">
+              <label><span data-i18n="events.fieldType">活動類型</span>
+                <select id="ef-type">
+                  <option value="leadership" data-i18n="eventType.leadership">領導管理</option>
+                  <option value="digital_skill" data-i18n="eventType.digital_skill">數位技能</option>
+                  <option value="compliance" data-i18n="eventType.compliance">法規遵循</option>
+                  <option value="other" data-i18n="eventType.other">其他</option>
+                </select>
+              </label>
+              <label><span data-i18n="events.fieldFormat">授課形式</span>
+                <select id="ef-format">
+                  <option value="in_person" data-i18n="eventFormat.in_person">實體</option>
+                  <option value="online" data-i18n="eventFormat.online">線上</option>
+                  <option value="hybrid" data-i18n="eventFormat.hybrid">混合</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3 data-i18n="events.rosterHeading">參加者名單</h3>
+            <p class="hint" data-i18n="events.rosterHint">瀏覽模擬名單，或上傳 CSV 名單檔案。</p>
+            <div class="roster-choice-row">
+              <button type="button" class="roster-choice-card" data-roster="full">
+                <span data-i18n="events.rosterMockFull">模擬名單（完整）</span>
+                <strong data-i18n="events.rosterMockFullCount">12 人</strong>
+              </button>
+              <button type="button" class="roster-choice-card" data-roster="lite">
+                <span data-i18n="events.rosterMockLite">模擬名單（精簡）</span>
+                <strong data-i18n="events.rosterMockLiteCount">6 人</strong>
+              </button>
+              <button type="button" class="roster-choice-card" data-roster="csv">
+                <span data-i18n="events.rosterCsv">上傳 CSV 名單</span>
+                <strong class="hint">employee_id, name, department, email</strong>
+              </button>
+            </div>
+            <input id="ef-csv-file" type="file" accept=".csv,.xlsx,.xls" class="hidden">
+            <div id="ef-roster-status" class="roster-status hint"></div>
+            <div id="ef-roster-preview"></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-heading"><span class="step-num">02</span><h3 data-i18n="events.groupingHeading">需要分組</h3></div>
+            <label class="toggle-row"><input type="checkbox" id="ef-grouping"><span data-i18n="events.groupingDesc">依所選名單自動平均分組，避免各組人數差距過大。</span></label>
+          </div>
+
+          <div class="panel">
+            <div class="section-heading"><span class="step-num">03</span><h3 data-i18n="events.featuresHeading">模組化功能</h3></div>
+            <div class="feature-toggle-row">
+              <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-materials"><span>📖 <span data-i18n="feature.materials">教材</span></span></label>
+              <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-survey"><span>📋 <span data-i18n="feature.survey">問卷</span></span></label>
+              <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-earlyBird"><span>🎁 <span data-i18n="feature.earlyBird">早鳥福利</span></span></label>
+              <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-lottery"><span>✨ <span data-i18n="feature.lottery">抽獎</span></span></label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary btn-big" data-i18n="events.submitBtn">新增活動</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ 智慧報到 ============ -->
+    <section id="screen-checkin" class="screen active">
+      <div id="checkin-step-picker">
+        <div class="page-eyebrow" data-i18n="checkinStep.eyebrow">SMART CHECK-IN</div>
+        <h1 data-i18n="checkinStep.heading">選擇活動並開始報到</h1>
+        <p class="page-desc" data-i18n="checkinStep.desc">透過搜尋與篩選快速找到活動，再進入現場報到工作台。</p>
+        <div class="filter-toolbar">
+          <input id="checkin-picker-search" type="text" data-i18n-placeholder="eventPicker.searchPlaceholder" placeholder="搜尋活動名稱">
+          <select id="checkin-picker-source">
+            <option value="" data-i18n="eventPicker.filterAllSources">所有來源</option>
+            <option value="lms" data-i18n="eventSource.lms">LMS 活動</option>
+            <option value="self" data-i18n="eventSource.self">自建活動</option>
+          </select>
+          <select id="checkin-picker-status">
+            <option value="" data-i18n="eventPicker.filterAllStatuses">所有狀態</option>
+            <option value="ongoing" data-i18n="eventStatus.ongoing">進行中</option>
+            <option value="upcoming" data-i18n="eventStatus.upcoming">即將開始</option>
+          </select>
+        </div>
+        <div id="checkin-picker-list" class="event-pick-list"></div>
+        <div id="checkin-picker-detail" class="panel hidden"></div>
+      </div>
+
+      <div id="checkin-step-workbench" class="hidden">
+        <button id="btn-back-to-picker" class="link-back">← <span data-i18n="checkinWorkbench.backLink">返回活動選擇</span></button>
+
+        <div class="workbench-header panel">
+          <div>
+            <span class="page-eyebrow" id="wb-source-label"></span>
+            <h1 id="wb-event-name"></h1>
+            <div class="event-card-meta" id="wb-event-meta"></div>
+          </div>
+          <div class="segmented-toggle" id="workbench-mode-toggle">
+            <button data-mode="checkin" class="active" data-i18n="checkinWorkbench.modeCheckin">Check-in 報到</button>
+            <button data-mode="checkout" data-i18n="checkinWorkbench.modeCheckout">Check-out 簽退</button>
+          </div>
+        </div>
+
+        <div class="segmented-toggle wide" id="scan-mode-toggle">
+          <button data-mode="card" class="active">🔊 <span data-i18n="checkinWorkbench.modeCard">刷卡報到／簽退</span></button>
+          <button data-mode="manual">⌨ <span data-i18n="checkinWorkbench.modeManual">人工報到／簽退</span></button>
+        </div>
+
+        <div id="card-scan-panel" class="panel scan-panel">
+          <div id="scan-waiting">
+            <div class="scan-status-pill"><span class="status-dot online"></span><span data-i18n="checkinWorkbench.readerConnected">讀卡機已連線</span></div>
+            <div class="scan-circle">📡</div>
+            <h2 data-i18n="checkinWorkbench.waitingHeading">等待感應員工識別卡</h2>
+            <p class="hint" data-i18n="checkinWorkbench.waitingDesc">完成感應後會立即顯示結果與組別資訊。</p>
+            <input id="checkin-card-input" type="text" class="card-input-hidden" autocomplete="off">
+            <div id="scan-quick-chips" class="scan-quick-chips"></div>
+          </div>
+          <div id="scan-result" class="scan-result-banner hidden"></div>
+        </div>
+
+        <div id="manual-panel" class="panel hidden">
+          <input id="checkin-search" type="text" data-i18n-placeholder="checkin.searchPlaceholder" placeholder="輸入姓名或工號搜尋..." autocomplete="off">
+          <div id="checkin-results" class="result-list"></div>
+          <button id="btn-open-walkin" class="btn-secondary" data-i18n="checkin.walkinToggle">找不到？現場報到</button>
+          <div id="walkin-form" class="walkin-form hidden">
+            <input id="walkin-name" type="text" data-i18n-placeholder="walkin.namePlaceholder" placeholder="姓名 *">
+            <input id="walkin-employeeid" type="text" data-i18n-placeholder="walkin.employeeIdPlaceholder" placeholder="工號（6碼數字，選填）" maxlength="6" inputmode="numeric" pattern="\d{6}">
+            <input id="walkin-email" type="email" data-i18n-placeholder="walkin.emailPlaceholder" placeholder="Email">
+            <div class="form-actions">
+              <button id="btn-walkin-submit" class="btn-primary" data-i18n="walkin.submit">送出現場報到</button>
+              <button id="btn-walkin-cancel" class="btn-ghost" data-i18n="walkin.cancel">取消</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel live-feed">
+          <div class="live-feed-header">
+            <div><span class="page-eyebrow" data-i18n="checkinWorkbench.liveFeedEyebrow">LIVE FEED</span><h2 data-i18n="checkinWorkbench.liveFeedHeading">最近記錄</h2></div>
+            <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+          </div>
+          <div id="live-feed-list"></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div id="checkin-confirm" class="confirm-panel hidden"></div>
-  </section>
-
-  <!-- ============ 儀表板 ============ -->
-  <section id="screen-dashboard" class="screen">
-    <h2 data-i18n="dashboard.heading">儀表板</h2>
-    <div id="stat-tiles" class="stat-tiles"></div>
-    <div class="panel">
-      <div class="dashboard-toolbar">
-        <input id="dashboard-search" type="text" data-i18n-placeholder="dashboard.searchPlaceholder" placeholder="搜尋姓名/工號/Email...">
-        <select id="dashboard-filter-status">
-          <option value="" data-i18n="dashboard.filterAll">全部狀態</option>
-          <option value="pending" data-i18n="status.pending">尚未報到</option>
-          <option value="on_time" data-i18n="status.on_time">準時</option>
-          <option value="late" data-i18n="status.late">遲到</option>
-          <option value="absent" data-i18n="status.absent">未到</option>
-        </select>
-        <button id="btn-export-csv" class="btn-secondary" data-i18n="dashboard.exportCsv">匯出 CSV</button>
-        <button id="btn-export-xlsx" class="btn-secondary" data-i18n="dashboard.exportXlsx">匯出 Excel</button>
+    <!-- ============ 數據報表 ============ -->
+    <section id="screen-reports" class="screen">
+      <div class="page-eyebrow" data-i18n="reports.eyebrow">LIVE OPERATIONS</div>
+      <h1 data-i18n="reports.heading">數據報表</h1>
+      <p class="page-desc" data-i18n="reports.desc">即時掌握出勤狀況，並快速聯絡尚未到場的同仁。</p>
+      <div class="event-select-row">
+        <span data-i18n="reports.selectLabel">瀏覽現有活動</span>
+        <select id="reports-event-select"><option value="" data-i18n="eventPicker.selectPlaceholder">請先選擇活動</option></select>
       </div>
-      <div class="table-wrap">
-        <table id="dashboard-table">
-          <thead>
-            <tr>
-              <th data-i18n="th.status">狀態</th><th data-i18n="th.name">姓名</th><th data-i18n="th.employeeId">工號</th><th data-i18n="th.email">Email</th><th data-i18n="th.earlybird">早鳥</th>
-              <th data-i18n="th.waitlist">候補</th><th data-i18n="th.groupseat">組別座位</th><th data-i18n="th.checkinTime">報到時間</th><th data-i18n="th.checkoutTime">簽退</th><th data-i18n="th.emailStatus">Email狀態</th><th data-i18n="th.lottery">抽獎</th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-tbody"></tbody>
-        </table>
+      <div id="reports-empty" class="empty-state">
+        <div class="empty-icon">👥</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
       </div>
-    </div>
-  </section>
+      <div id="reports-content" class="hidden"></div>
+    </section>
 
-  <!-- ============ 分組座位 ============ -->
-  <section id="screen-grouping" class="screen">
-    <h2 data-i18n="grouping.heading">分組座位板</h2>
-    <div id="grouping-board" class="grouping-board"></div>
-  </section>
-
-  <!-- ============ 抽獎 ============ -->
-  <section id="screen-lottery" class="screen">
-    <h2 data-i18n="lottery.heading">現場抽獎</h2>
-    <div class="panel lottery-panel">
-      <p id="lottery-pool-label"></p>
-      <label><input type="checkbox" id="lottery-exclude-winners" checked> <span data-i18n="lottery.excludeWinners">排除已得獎者</span></label>
-      <div class="form-actions">
-        <button id="btn-draw" class="btn-primary btn-big" data-i18n="lottery.drawBtn">🎉 抽獎</button>
-        <button id="btn-reset-lottery" class="btn-ghost" data-i18n="lottery.resetBtn">重置得獎名單</button>
+    <!-- ============ 歷史紀錄 ============ -->
+    <section id="screen-history" class="screen">
+      <div class="page-eyebrow" data-i18n="history.eyebrow">HISTORY</div>
+      <h1 data-i18n="history.heading">歷史紀錄</h1>
+      <p class="page-desc" data-i18n="history.desc">查看已結束與已取消活動的人員報到、簽退及請假紀錄。</p>
+      <div class="event-select-row">
+        <span data-i18n="history.selectLabel">選擇歷史活動</span>
+        <select id="history-event-select"><option value="" data-i18n="eventPicker.selectPlaceholder">請先選擇活動</option></select>
       </div>
-    </div>
-    <div id="lottery-winner-banner" class="winner-banner hidden"></div>
-    <div class="panel">
-      <h3 data-i18n="lottery.historyHeading">得獎紀錄</h3>
-      <ol id="lottery-history"></ol>
-    </div>
-  </section>
-
-  <!-- ============ 名單匯入 ============ -->
-  <section id="screen-import" class="screen">
-    <h2 data-i18n="import.heading">名單匯入</h2>
-    <div class="panel">
-      <input id="import-file" type="file" accept=".csv,.xlsx,.xls">
-      <p class="hint" data-i18n="import.hint">支援 CSV / Excel，欄位建議包含：姓名、工號、Email、報名時間</p>
-      <div id="import-preview"></div>
-      <button id="btn-import-confirm" class="btn-primary hidden" data-i18n="import.confirmBtn">確認匯入</button>
-    </div>
-  </section>
-
-  <!-- ============ 設定 ============ -->
-  <section id="screen-settings" class="screen">
-    <h2 data-i18n="settings.heading">活動設定</h2>
-    <div class="panel">
-      <h3 data-i18n="settings.eventInfo">活動資訊</h3>
-      <label><span data-i18n="settings.eventName">活動名稱</span> <input id="set-name" type="text"></label>
-      <label><span data-i18n="settings.startTime">開始時間</span> <input id="set-start" type="datetime-local"></label>
-      <label><span data-i18n="settings.endTime">結束時間</span> <input id="set-end" type="datetime-local"></label>
-      <label><span data-i18n="settings.capacity">活動容量（現場候補用）</span> <input id="set-capacity" type="number" min="0"></label>
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.rules">報到規則（分鐘）</h3>
-      <label><span data-i18n="settings.lateThreshold">遲到門檻</span> <input id="set-late" type="number" min="0"></label>
-      <label><span data-i18n="settings.absentThreshold">報到截止（超過視為未到並阻擋報到）</span> <input id="set-absent" type="number" min="0"></label>
-      <label><span data-i18n="settings.earlyLeaveWindow">早退判定窗口（結束前幾分鐘內簽退算早退）</span> <input id="set-earlyleave" type="number" min="0"></label>
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.earlyBirdSection">早鳥福利</h3>
-      <label><span data-i18n="settings.earlyBirdCount">早鳥名額（依報名時間排序前 N 名，且須準時報到）</span> <input id="set-earlybird" type="number" min="0"></label>
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.groupingSection">智慧分組</h3>
-      <label><span data-i18n="settings.groupCount">組數</span> <input id="set-groupcount" type="number" min="1"></label>
-      <label><span data-i18n="settings.groupSize">每組人數（規劃值，供超額提示用）</span> <input id="set-groupsize" type="number" min="1"></label>
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.emailSection">EmailJS 講義寄送</h3>
-      <label><input type="checkbox" id="set-email-enabled"> <span data-i18n="settings.emailEnable">啟用報到後自動寄送講義 Email</span></label>
-      <label>Service ID <input id="set-email-service" type="text"></label>
-      <label>Template ID <input id="set-email-template" type="text"></label>
-      <label>Public Key <input id="set-email-publickey" type="text"></label>
-      <label><span data-i18n="settings.handoutLink">講義連結</span> <input id="set-email-link" type="text"></label>
-      <div class="form-actions">
-        <button id="btn-email-test" class="btn-secondary" data-i18n="settings.emailTestBtn">測試寄送給自己</button>
-        <input id="set-email-testaddr" type="email" data-i18n-placeholder="settings.emailTestPlaceholder" placeholder="測試收件 Email">
+      <div id="history-empty" class="empty-state">
+        <div class="empty-icon">🕓</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
       </div>
-    </div>
-    <div class="panel">
-      <button id="btn-save-settings" class="btn-primary" data-i18n="settings.saveBtn">儲存設定</button>
-      <span id="settings-saved-hint" class="hint hidden" data-i18n="settings.savedHint">已儲存</span>
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.backupSection">資料備份</h3>
-      <button id="btn-backup-export" class="btn-secondary" data-i18n="settings.backupExport">匯出備份 (JSON)</button>
-      <input id="btn-backup-import" type="file" accept=".json">
-    </div>
-    <div class="panel">
-      <h3 data-i18n="settings.demoSection">展示用示範資料</h3>
-      <p class="hint" data-i18n="settings.demoHint">一鍵載入涵蓋所有功能的範例資料（早鳥、準時/遲到/尚未報到、正常簽退/早退、現場候補、已分組配位、已有抽獎紀錄），方便展示給主管看。會覆蓋目前資料，且每次載入都會以「現在時間」重新產生，展示前可以重新點一次讓報到功能維持可操作。</p>
-      <button id="btn-load-demo" class="btn-secondary" data-i18n="settings.demoBtn">載入示範資料</button>
-    </div>
-    <div class="panel danger-zone">
-      <h3 data-i18n="settings.dangerSection">危險操作</h3>
-      <button id="btn-clear-all" class="btn-danger" data-i18n="settings.clearAllBtn">清除所有資料</button>
-    </div>
-  </section>
+      <div id="history-content" class="hidden"></div>
+    </section>
 
-</main>
+    <!-- ============ 教材管理 ============ -->
+    <section id="screen-materials" class="screen">
+      <div class="page-eyebrow" data-i18n="materials.eyebrow">MATERIALS</div>
+      <h1 data-i18n="materials.heading">教材管理</h1>
+      <div id="materials-empty" class="empty-state">
+        <div class="empty-icon">📖</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
+      </div>
+      <div id="materials-content" class="hidden"></div>
+    </section>
+
+    <!-- ============ 早鳥福利 ============ -->
+    <section id="screen-earlybird" class="screen">
+      <div class="page-eyebrow" data-i18n="earlybirdPage.eyebrow">EARLY BIRD</div>
+      <h1 data-i18n="earlybirdPage.heading">早鳥福利</h1>
+      <div id="earlybird-empty" class="empty-state">
+        <div class="empty-icon">🎁</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
+      </div>
+      <div id="earlybird-content" class="hidden"></div>
+    </section>
+
+    <!-- ============ 活動抽獎 ============ -->
+    <section id="screen-lottery" class="screen">
+      <div class="page-eyebrow" data-i18n="lotteryPage.eyebrow">LOTTERY</div>
+      <h1 data-i18n="lotteryPage.heading">活動抽獎</h1>
+      <div id="lottery-empty" class="empty-state">
+        <div class="empty-icon">✨</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
+      </div>
+      <div id="lottery-content" class="hidden"></div>
+    </section>
+
+    <!-- ============ 問卷發送 ============ -->
+    <section id="screen-survey" class="screen">
+      <div class="page-eyebrow" data-i18n="surveyPage.eyebrow">SURVEY</div>
+      <h1 data-i18n="surveyPage.heading">問卷發送</h1>
+      <div id="survey-empty" class="empty-state">
+        <div class="empty-icon">📋</div>
+        <p data-i18n="eventPicker.selectPlaceholder">請先選擇活動</p>
+      </div>
+      <div id="survey-content" class="hidden"></div>
+    </section>
+
+  </main>
+</div>
 
 <div id="toast-container" class="toast-container"></div>
 

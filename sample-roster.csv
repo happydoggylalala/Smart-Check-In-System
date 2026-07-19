@@ -1,11 +1,11 @@
-姓名,工號,Email,報名時間
-王小明,100001,ming@example.com,2026-06-01 10:00:00
-李小華,100002,hua@example.com,2026-06-01 10:05:00
-陳大同,100003,datong@example.com,2026-06-02 09:20:00
-林美玲,100004,meiling@example.com,2026-06-02 14:30:00
-張家豪,100005,jiahao@example.com,2026-06-03 08:15:00
-黃詩涵,100006,shihan@example.com,2026-06-03 11:45:00
-吳建志,100007,jianzhi@example.com,2026-06-04 16:00:00
-周佳穎,100008,jiaying@example.com,2026-06-05 09:00:00
-許志偉,100009,zhiwei@example.com,2026-06-06 13:20:00
-蔡佩珊,100010,peishan@example.com,2026-06-07 10:10:00
+employee_id,name,department,email
+100001,王小明,研發部,ming@example.com
+100002,李小華,產品部,hua@example.com
+100003,陳大同,業務部,datong@example.com
+100004,林美玲,人力資源部,meiling@example.com
+100005,張家豪,工程部,jiahao@example.com
+100006,黃詩涵,財務部,shihan@example.com
+100007,吳建志,行銷部,jianzhi@example.com
+100008,周佳穎,法務部,jiaying@example.com
+100009,許志偉,資訊部,zhiwei@example.com
+100010,蔡佩珊,客服部,peishan@example.com

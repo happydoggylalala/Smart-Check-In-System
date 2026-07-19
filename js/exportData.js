@@ -1,17 +1,16 @@
-import { getState } from './state.js';
-import { computeDisplayStatus, computeEarlyLeave, statusLabel } from './checkin.js';
+import { computeDisplayStatus, computeEarlyLeave, statusLabel } from './checkinLogic.js';
 import { t } from './i18n.js';
 import { formatDateTime, nowIso } from './utils.js';
 
-function buildExportRows() {
-  const state = getState();
+function buildExportRows(event) {
   const now = nowIso();
-  return state.roster.map(p => ({
+  return event.roster.map(p => ({
     [t('export.name')]: p.name,
     [t('export.employeeId')]: p.employeeId,
     [t('export.email')]: p.email,
-    [t('export.status')]: statusLabel(computeDisplayStatus(p, state.event, now)),
-    [t('export.earlyLeave')]: computeEarlyLeave(p, state.event) ? t('export.yes') : '',
+    [t('reports.filterAllDept')]: p.department || '',
+    [t('export.status')]: p.onLeave ? t('status.on_leave') : statusLabel(computeDisplayStatus(p, event, now)),
+    [t('export.earlyLeave')]: computeEarlyLeave(p, event) ? t('export.yes') : '',
     [t('export.earlybird')]: p.isEarlyBird ? t('export.yes') : '',
     [t('export.waitlist')]: p.checkin.waitlisted ? t('export.yes') : '',
     [t('export.group')]: p.group.groupIndex || '',
@@ -23,20 +22,20 @@ function buildExportRows() {
   }));
 }
 
-export function exportCsv() {
-  const rows = buildExportRows();
+export function exportEventCsv(event) {
+  const rows = buildExportRows(event);
   const ws = window.XLSX.utils.json_to_sheet(rows);
   const csv = window.XLSX.utils.sheet_to_csv(ws);
   const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-  downloadBlob(blob, `${t('export.filenamePrefix')}_${Date.now()}.csv`);
+  downloadBlob(blob, `${t('export.filenamePrefix')}_${event.name}_${Date.now()}.csv`);
 }
 
-export function exportXlsx() {
-  const rows = buildExportRows();
+export function exportEventXlsx(event) {
+  const rows = buildExportRows(event);
   const ws = window.XLSX.utils.json_to_sheet(rows);
   const wb = window.XLSX.utils.book_new();
   window.XLSX.utils.book_append_sheet(wb, ws, t('export.filenamePrefix'));
-  window.XLSX.writeFile(wb, `${t('export.filenamePrefix')}_${Date.now()}.xlsx`);
+  window.XLSX.writeFile(wb, `${t('export.filenamePrefix')}_${event.name}_${Date.now()}.xlsx`);
 }
 
 function downloadBlob(blob, filename) {

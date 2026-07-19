@@ -1,52 +1,56 @@
-import { initNav, showScreen } from './nav.js';
-import { initCheckinScreen, reRenderSearch, focusCardInput } from './checkin.js';
-import { initImportScreen } from './importRoster.js';
-import { initSettingsScreen } from './settingsScreen.js';
-import { initDashboardScreen, renderDashboard } from './dashboard.js';
-import { renderGroupingBoard } from './grouping.js';
-import { initLotteryScreen, renderLotteryScreen } from './lottery.js';
-import { exportCsv, exportXlsx } from './exportData.js';
-import { getLang, setLang, onLangChange, applyStaticTranslations, SUPPORTED_LANGS, LANG_NAMES } from './i18n.js';
+import { initSidebar, showScreen, refreshSidebar } from './sidebar.js';
+import { initTopHeader, renderUserBadge } from './topHeader.js';
+import { initEventsScreen, refreshEventsScreen } from './eventsScreen.js';
+import { initCheckinScreen, refreshCheckinScreen } from './checkinScreen.js';
+import { initReportsScreen, refreshReportsScreen } from './reportsScreen.js';
+import { initHistoryScreen, refreshHistoryScreen } from './historyScreen.js';
+import { initEarlybirdScreen, refreshEarlybirdScreen } from './earlybirdScreen.js';
+import { initLotteryScreen, refreshLotteryScreen } from './lotteryScreen.js';
+import { initMaterialsScreen, refreshMaterialsScreen } from './materialsScreen.js';
+import { initSurveyScreen, refreshSurveyScreen } from './surveyScreen.js';
+import { applyStaticTranslations } from './i18n.js';
 
 function renderAll() {
-  renderDashboard();
-  renderGroupingBoard();
-  renderLotteryScreen();
-  reRenderSearch();
+  refreshReportsScreen();
+  refreshHistoryScreen();
+  refreshEarlybirdScreen();
+  refreshLotteryScreen();
+  refreshMaterialsScreen();
+  refreshSurveyScreen();
 }
 
-function initLangSwitcher() {
-  const select = document.getElementById('lang-switcher');
-  select.innerHTML = SUPPORTED_LANGS.map(code => `<option value="${code}">${LANG_NAMES[code]}</option>`).join('');
-  select.value = getLang();
-  document.documentElement.lang = getLang();
-  select.addEventListener('change', () => setLang(select.value));
-  onLangChange(() => renderAll());
+function renderAllForLangSwitch() {
+  applyStaticTranslations();
+  renderUserBadge();
+  refreshSidebar();
+  refreshEventsScreen();
+  refreshCheckinScreen();
+  renderAll();
 }
 
 function init() {
   applyStaticTranslations();
-  initLangSwitcher();
-
-  initNav(id => {
-    if (id === 'screen-dashboard') renderDashboard();
-    if (id === 'screen-grouping') renderGroupingBoard();
-    if (id === 'screen-lottery') renderLotteryScreen();
-    if (id === 'screen-checkin') focusCardInput();
+  initTopHeader({ onLangSwitch: renderAllForLangSwitch });
+  initSidebar({
+    onNavigate: id => {
+      if (id === 'screen-reports') refreshReportsScreen();
+      if (id === 'screen-history') refreshHistoryScreen();
+      if (id === 'screen-earlybird') refreshEarlybirdScreen();
+      if (id === 'screen-lottery') refreshLotteryScreen();
+      if (id === 'screen-materials') refreshMaterialsScreen();
+      if (id === 'screen-survey') refreshSurveyScreen();
+    },
   });
-
+  initEventsScreen({ onEventChanged: renderAll });
   initCheckinScreen({ onStateChanged: renderAll });
-  initImportScreen({ onImported: renderAll });
-  initSettingsScreen({ onStateChanged: renderAll });
-  initDashboardScreen();
+  initReportsScreen();
+  initHistoryScreen();
+  initEarlybirdScreen();
   initLotteryScreen();
-
-  document.getElementById('btn-export-csv').addEventListener('click', exportCsv);
-  document.getElementById('btn-export-xlsx').addEventListener('click', exportXlsx);
+  initMaterialsScreen();
+  initSurveyScreen();
 
   showScreen('screen-checkin');
-  renderAll();
-  focusCardInput();
 }
 
 document.addEventListener('DOMContentLoaded', init);

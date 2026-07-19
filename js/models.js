@@ -1,17 +1,32 @@
 import { uuid, nowIso } from './utils.js';
 
-export function createDefaultEvent() {
+export function createEventRecord() {
+  const now = nowIso();
   return {
+    id: uuid(),
     name: '',
+    organizer: '',
+    location: '',
+    type: 'other',
+    format: 'in_person',
+    source: 'self',
+    lmsCourseId: null,
     startTime: null,
     endTime: null,
-    capacity: 0,
+    capacity: 40,
+    cancelled: false,
+
     lateThresholdMin: 15,
     absentThresholdMin: 30,
     earlyLeaveWindowMin: 30,
     earlyBirdCount: 0,
+
+    groupingEnabled: false,
     groupCount: 1,
     groupSize: 1,
+
+    features: { materials: false, survey: false, earlyBird: false, lottery: false },
+
     emailJs: {
       serviceId: '',
       templateId: '',
@@ -19,18 +34,31 @@ export function createDefaultEvent() {
       handoutLink: '',
       enabled: false,
     },
+
+    roster: [],
+    nextAssignSeq: 1,
+    lotteryWinnersHistory: [],
+    materials: [],
+    survey: { link: '', sentAt: null },
+    recentActivity: [],
+
+    createdAt: now,
+    updatedAt: now,
   };
 }
 
-export function createPerson({ name, employeeId = '', email = '', registeredAt = null, source = 'import' }) {
+export function createPerson({ name, employeeId = '', email = '', department = '', extension = '', registeredAt = null, source = 'import' }) {
   return {
     id: uuid(),
     name,
     employeeId,
     email,
+    department,
+    extension,
     registeredAt: registeredAt || nowIso(),
     source,
     isEarlyBird: false,
+    onLeave: false,
     checkin: {
       checkedInAt: null,
       checkedOutAt: null,
@@ -41,15 +69,13 @@ export function createPerson({ name, employeeId = '', email = '', registeredAt =
     group: { groupIndex: null, seatIndex: null, assignSeq: null },
     lottery: { eligible: false, won: false, wonAt: null },
     emailStatus: { status: 'not_sent', sentAt: null, error: null },
+    surveyStatus: { status: 'not_sent', sentAt: null },
   };
 }
 
 export function createInitialState() {
   return {
-    schemaVersion: 1,
-    event: createDefaultEvent(),
-    roster: [],
-    lotteryWinnersHistory: [],
-    nextAssignSeq: 1,
+    schemaVersion: 2,
+    events: [],
   };
 }

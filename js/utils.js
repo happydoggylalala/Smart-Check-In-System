@@ -68,3 +68,23 @@ export function fromDatetimeLocalValue(value) {
   if (isNaN(d.getTime())) return null;
   return d.toISOString();
 }
+
+export function formatDayMonth(iso) {
+  if (!iso) return { day: '--', month: '--' };
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return { day: '--', month: '--' };
+  const pad = n => String(n).padStart(2, '0');
+  return { day: pad(d.getDate()), month: pad(d.getMonth() + 1) };
+}
+
+export function timeRangeLabel(startIso, endIso) {
+  if (!startIso) return '';
+  const start = new Date(startIso);
+  const pad = n => String(n).padStart(2, '0');
+  const dateStr = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`;
+  const startTimeStr = `${pad(start.getHours())}:${pad(start.getMinutes())}`;
+  if (!endIso) return `${dateStr} · ${startTimeStr}`;
+  const end = new Date(endIso);
+  const endTimeStr = `${pad(end.getHours())}:${pad(end.getMinutes())}`;
+  return `${dateStr} · ${startTimeStr}–${endTimeStr}`;
+}

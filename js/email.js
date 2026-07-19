@@ -34,6 +34,29 @@ export async function sendHandoutEmail(person, event) {
   }
 }
 
+export async function sendSurveyEmail(person, event) {
+  const cfg = event.emailJs;
+  if (!cfg.enabled || !cfg.serviceId || !cfg.templateId || !cfg.publicKey) {
+    return { status: 'skipped_not_configured' };
+  }
+  if (!person.email) {
+    return { status: 'skipped_no_email' };
+  }
+  try {
+    ensureInit(cfg.publicKey);
+    await window.emailjs.send(cfg.serviceId, cfg.templateId, {
+      to_email: person.email,
+      to_name: person.name,
+      event_name: event.name,
+      handout_link: event.survey.link,
+      group_seat: person.group.groupIndex ? t('email.groupSeatLabel', { group: person.group.groupIndex, seat: person.group.seatIndex }) : '',
+    });
+    return { status: 'sent' };
+  } catch (err) {
+    return { status: 'failed', error: String(err?.text || err?.message || err) };
+  }
+}
+
 export async function sendTestEmail(event, toAddress) {
   const cfg = event.emailJs;
   if (!cfg.serviceId || !cfg.templateId || !cfg.publicKey) {
