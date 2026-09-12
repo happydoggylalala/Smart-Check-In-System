@@ -20,6 +20,7 @@ export function createEventRecord() {
     absentThresholdMin: 30,
     earlyLeaveWindowMin: 30,
     earlyBirdCount: 0,
+    earlyBirdPrizeName: '',
 
     groupingEnabled: false,
     groupCount: 1,
@@ -37,7 +38,8 @@ export function createEventRecord() {
 
     roster: [],
     nextAssignSeq: 1,
-    lotteryWinnersHistory: [],
+    lotteryPrizes: [], // { id, name, quantity, drawnCount }
+    lotteryWinnersHistory: [], // { id, personId, prizeId, prizeName, wonAt }
     materials: [],
     survey: { link: '', sentAt: null },
     recentActivity: [],

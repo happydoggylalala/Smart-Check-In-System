@@ -65,6 +65,8 @@ function render() {
   content.innerHTML = `
     <p class="hint">${t('earlybirdPage.desc')}</p>
     <p><strong>${t('earlybirdPage.countLabel', { n })}</strong></p>
+    <label><span>${t('events.fieldEarlyBirdPrizeName')}</span><input id="eb-prize-name" type="text" value="${escapeHtml(event.earlyBirdPrizeName || '')}" placeholder="${t('events.earlyBirdPrizeNamePlaceholder')}"></label>
+    <button id="eb-save-prize" class="btn-secondary">${t('materials.saveBtn')}</button>
     <div class="form-actions">
       <button id="eb-grant-all" class="btn-primary">${t('earlybirdPage.grantAllBtn')}</button>
       <span class="hint">${t('earlybirdPage.grantedSummary', { granted: grantedCount, eligible: eligibleCount })}</span>
@@ -88,6 +90,11 @@ function render() {
     </div>
   `;
 
+  document.getElementById('eb-save-prize').addEventListener('click', () => {
+    const prizeName = document.getElementById('eb-prize-name').value.trim();
+    updateEvent(eventId, ev => { ev.earlyBirdPrizeName = prizeName; });
+    showToast(t('settings.savedToast'), 'success');
+  });
   document.getElementById('eb-grant-all').addEventListener('click', () => grantAll(eventId));
   content.querySelectorAll('.eb-grant-btn').forEach(btn => {
     btn.addEventListener('click', () => grantOne(eventId, btn.dataset.id));

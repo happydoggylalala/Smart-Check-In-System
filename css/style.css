@@ -259,7 +259,7 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
 }
 .feature-toggle-card input { width: auto !important; margin: 0 !important; }
 .feature-detail { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); }
-.materials-draft-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; margin-top: 8px; font-size: 13px; }
+.draft-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; margin-top: 8px; font-size: 13px; }
 
 /* ---------- Event picker (Check-in Step A) ---------- */
 .event-pick-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }

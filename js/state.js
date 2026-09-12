@@ -5,12 +5,21 @@ const STORAGE_KEY = 'smartCheckin.v2';
 
 let state = load();
 
+// 補上早鳥獎項名稱／抽獎獎項這兩個欄位是後來才加入的，讓在那之前就存在
+// localStorage 裡的舊活動資料也能正常運作，避免讀取 undefined 而壞掉。
+function migrateEvent(event) {
+  if (event.earlyBirdPrizeName === undefined) event.earlyBirdPrizeName = '';
+  if (!Array.isArray(event.lotteryPrizes)) event.lotteryPrizes = [];
+  return event;
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return createInitialState();
     const parsed = JSON.parse(raw);
     if (!parsed || parsed.schemaVersion !== 2 || !Array.isArray(parsed.events)) return createInitialState();
+    parsed.events.forEach(migrateEvent);
     return parsed;
   } catch {
     return createInitialState();
@@ -50,5 +59,6 @@ export function importBackup(jsonText) {
   if (!parsed || parsed.schemaVersion !== 2 || !Array.isArray(parsed.events)) {
     throw new Error(t('state.errBadBackup'));
   }
+  parsed.events.forEach(migrateEvent);
   replaceState(parsed);
 }

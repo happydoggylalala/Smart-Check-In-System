@@ -173,11 +173,20 @@
             </div>
 
             <div id="ef-feat-earlyBird-detail" class="feature-detail hidden">
-              <label><span data-i18n="events.fieldEarlyBirdCount">早鳥名額人數</span><input id="ef-earlybird-count" type="number" min="1" data-i18n-placeholder="events.earlyBirdCountPlaceholder" placeholder="預設為名單人數的 1/4"></label>
+              <div class="form-grid">
+                <label><span data-i18n="events.fieldEarlyBirdCount">早鳥名額人數</span><input id="ef-earlybird-count" type="number" min="1" data-i18n-placeholder="events.earlyBirdCountPlaceholder" placeholder="預設為名單人數的 1/4"></label>
+                <label><span data-i18n="events.fieldEarlyBirdPrizeName">早鳥獎項名稱</span><input id="ef-earlybird-prize" type="text" data-i18n-placeholder="events.earlyBirdPrizeNamePlaceholder" placeholder="例如：星巴克飲料券"></label>
+              </div>
             </div>
 
             <div id="ef-feat-lottery-detail" class="feature-detail hidden">
-              <p class="hint" data-i18n="events.lotteryDetailHint">抽獎不需要事先設定，活動建立後至「活動抽獎」頁面即可抽獎。</p>
+              <p class="hint" data-i18n="events.lotteryDetailHint">活動建立後至「活動抽獎」頁面即可抽獎。可先在此設定獎項，之後也能再新增。</p>
+              <div class="form-grid">
+                <label><span data-i18n="lottery.fieldPrizeName">獎項名稱 *</span><input id="ef-lp-name" type="text"></label>
+                <label><span data-i18n="lottery.fieldPrizeQuantity">數量 *</span><input id="ef-lp-qty" type="number" min="1" value="1"></label>
+              </div>
+              <button type="button" id="ef-lp-add" class="btn-secondary" data-i18n="lottery.addPrizeBtn">新增獎項</button>
+              <div id="ef-lottery-prize-list"></div>
             </div>
           </div>
 

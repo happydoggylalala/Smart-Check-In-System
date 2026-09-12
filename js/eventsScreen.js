@@ -14,6 +14,7 @@ let selectedRoster = null; // { key: 'full'|'lite'|'csv', people: PersonRecord[]
 let selectedLmsCourseId = null;
 let onEventCreated = null;
 let materialsDraft = []; // { id, title, link, description } — filled in during event creation
+let lotteryPrizesDraft = []; // { id, name, quantity } — filled in during event creation
 
 function renderBrowseList() {
   const container = document.getElementById('events-list');
@@ -57,6 +58,7 @@ function resetCreateFlow() {
   selectedRoster = null;
   selectedLmsCourseId = null;
   materialsDraft = [];
+  lotteryPrizesDraft = [];
   document.getElementById('create-source-step').classList.remove('hidden');
   document.getElementById('lms-picker').classList.add('hidden');
   document.getElementById('event-form').classList.add('hidden');
@@ -67,6 +69,7 @@ function resetCreateFlow() {
   document.querySelectorAll('#ef-name,#ef-organizer,#ef-location,#ef-date,#ef-start,#ef-end,#ef-type,#ef-format').forEach(el => { el.disabled = false; });
   document.querySelectorAll('.feature-detail').forEach(el => el.classList.add('hidden'));
   renderMaterialsDraft();
+  renderLotteryPrizesDraft();
 }
 
 function toggleFeatureDetail(feature, checked) {
@@ -80,7 +83,7 @@ function renderMaterialsDraft() {
     return;
   }
   container.innerHTML = materialsDraft.map(m => `
-    <div class="materials-draft-item">
+    <div class="draft-list-item">
       <div>
         <strong>${escapeHtml(m.title)}</strong>
         ${m.link ? ` · ${escapeHtml(m.link)}` : ''}
@@ -106,6 +109,37 @@ function addMaterialDraft() {
   document.getElementById('ef-mat-link').value = '';
   document.getElementById('ef-mat-desc').value = '';
   renderMaterialsDraft();
+}
+
+function renderLotteryPrizesDraft() {
+  const container = document.getElementById('ef-lottery-prize-list');
+  if (lotteryPrizesDraft.length === 0) {
+    container.innerHTML = `<p class="hint">${t('lottery.noPrizesYet')}</p>`;
+    return;
+  }
+  container.innerHTML = lotteryPrizesDraft.map(p => `
+    <div class="draft-list-item">
+      <div><strong>${escapeHtml(p.name)}</strong> · ${t('lottery.prizeQuantityLabel', { n: p.quantity })}</div>
+      <button type="button" class="btn-danger-outline" data-id="${p.id}">${t('materials.deleteBtn')}</button>
+    </div>
+  `).join('');
+  container.querySelectorAll('button[data-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lotteryPrizesDraft = lotteryPrizesDraft.filter(p => p.id !== btn.dataset.id);
+      renderLotteryPrizesDraft();
+    });
+  });
+}
+
+function addLotteryPrizeDraft() {
+  const name = document.getElementById('ef-lp-name').value.trim();
+  const quantity = Number(document.getElementById('ef-lp-qty').value);
+  if (!name) return showToast(t('lottery.errPrizeName'), 'error');
+  if (!quantity || quantity < 1) return showToast(t('lottery.errPrizeQuantity'), 'error');
+  lotteryPrizesDraft.push({ id: uuid(), name, quantity, drawnCount: 0 });
+  document.getElementById('ef-lp-name').value = '';
+  document.getElementById('ef-lp-qty').value = '1';
+  renderLotteryPrizesDraft();
 }
 
 function renderLmsCourseList() {
@@ -246,6 +280,8 @@ function handleSubmit(e) {
     nextAssignSeq: groupAssignState.nextAssignSeq,
     materials: document.getElementById('ef-feat-materials').checked ? materialsDraft : [],
     survey: { link: document.getElementById('ef-feat-survey').checked ? document.getElementById('ef-survey-link').value.trim() : '', sentAt: null },
+    earlyBirdPrizeName: earlyBirdFeatureOn ? document.getElementById('ef-earlybird-prize').value.trim() : '',
+    lotteryPrizes: document.getElementById('ef-feat-lottery').checked ? lotteryPrizesDraft : [],
     updatedAt: nowIso(),
   });
 
@@ -293,7 +329,9 @@ export function initEventsScreen({ onEventChanged } = {}) {
     });
   });
   document.getElementById('ef-mat-add').addEventListener('click', addMaterialDraft);
+  document.getElementById('ef-lp-add').addEventListener('click', addLotteryPrizeDraft);
   renderMaterialsDraft();
+  renderLotteryPrizesDraft();
 
   renderBrowseList();
 }
