@@ -157,6 +157,28 @@
               <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-earlyBird"><span>🎁 <span data-i18n="feature.earlyBird">早鳥福利</span></span></label>
               <label class="feature-toggle-card"><input type="checkbox" id="ef-feat-lottery"><span>✨ <span data-i18n="feature.lottery">抽獎</span></span></label>
             </div>
+
+            <div id="ef-feat-materials-detail" class="feature-detail hidden">
+              <div class="form-grid">
+                <label><span data-i18n="materials.fieldTitle">標題 *</span><input id="ef-mat-title" type="text"></label>
+                <label><span data-i18n="materials.fieldLink">連結</span><input id="ef-mat-link" type="text"></label>
+              </div>
+              <label><span data-i18n="materials.fieldDesc">說明</span><input id="ef-mat-desc" type="text"></label>
+              <button type="button" id="ef-mat-add" class="btn-secondary" data-i18n="materials.addBtn">新增教材</button>
+              <div id="ef-materials-list"></div>
+            </div>
+
+            <div id="ef-feat-survey-detail" class="feature-detail hidden">
+              <label><span data-i18n="surveyPage.linkLabel">問卷連結</span><input id="ef-survey-link" type="text" placeholder="https://forms.example/..."></label>
+            </div>
+
+            <div id="ef-feat-earlyBird-detail" class="feature-detail hidden">
+              <label><span data-i18n="events.fieldEarlyBirdCount">早鳥名額人數</span><input id="ef-earlybird-count" type="number" min="1" data-i18n-placeholder="events.earlyBirdCountPlaceholder" placeholder="預設為名單人數的 1/4"></label>
+            </div>
+
+            <div id="ef-feat-lottery-detail" class="feature-detail hidden">
+              <p class="hint" data-i18n="events.lotteryDetailHint">抽獎不需要事先設定，活動建立後至「活動抽獎」頁面即可抽獎。</p>
+            </div>
           </div>
 
           <button type="submit" class="btn-primary btn-big" data-i18n="events.submitBtn">新增活動</button>

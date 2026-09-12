@@ -6,13 +6,14 @@ import { buildDemoRoster } from './demoData.js';
 import { parseFile, guessMapping, rowsToPeople, downloadCsvTemplate } from './importRoster.js';
 import { MOCK_LMS_COURSES, getMockLmsCourse } from './mockOrg.js';
 import { t } from './i18n.js';
-import { showToast, escapeHtml, nowIso } from './utils.js';
+import { showToast, escapeHtml, nowIso, uuid } from './utils.js';
 import { showScreen, refreshSidebar } from './sidebar.js';
 import { showEventInReports } from './reportsScreen.js';
 
 let selectedRoster = null; // { key: 'full'|'lite'|'csv', people: PersonRecord[] }
 let selectedLmsCourseId = null;
 let onEventCreated = null;
+let materialsDraft = []; // { id, title, link, description } — filled in during event creation
 
 function renderBrowseList() {
   const container = document.getElementById('events-list');
@@ -55,6 +56,7 @@ function switchView(view) {
 function resetCreateFlow() {
   selectedRoster = null;
   selectedLmsCourseId = null;
+  materialsDraft = [];
   document.getElementById('create-source-step').classList.remove('hidden');
   document.getElementById('lms-picker').classList.add('hidden');
   document.getElementById('event-form').classList.add('hidden');
@@ -63,6 +65,47 @@ function resetCreateFlow() {
   document.getElementById('ef-roster-status').textContent = '';
   document.getElementById('ef-roster-preview').innerHTML = '';
   document.querySelectorAll('#ef-name,#ef-organizer,#ef-location,#ef-date,#ef-start,#ef-end,#ef-type,#ef-format').forEach(el => { el.disabled = false; });
+  document.querySelectorAll('.feature-detail').forEach(el => el.classList.add('hidden'));
+  renderMaterialsDraft();
+}
+
+function toggleFeatureDetail(feature, checked) {
+  document.getElementById(`ef-feat-${feature}-detail`).classList.toggle('hidden', !checked);
+}
+
+function renderMaterialsDraft() {
+  const container = document.getElementById('ef-materials-list');
+  if (materialsDraft.length === 0) {
+    container.innerHTML = `<p class="hint">${t('events.materialsDraftEmpty')}</p>`;
+    return;
+  }
+  container.innerHTML = materialsDraft.map(m => `
+    <div class="materials-draft-item">
+      <div>
+        <strong>${escapeHtml(m.title)}</strong>
+        ${m.link ? ` · ${escapeHtml(m.link)}` : ''}
+      </div>
+      <button type="button" class="btn-danger-outline" data-id="${m.id}">${t('materials.deleteBtn')}</button>
+    </div>
+  `).join('');
+  container.querySelectorAll('button[data-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      materialsDraft = materialsDraft.filter(m => m.id !== btn.dataset.id);
+      renderMaterialsDraft();
+    });
+  });
+}
+
+function addMaterialDraft() {
+  const title = document.getElementById('ef-mat-title').value.trim();
+  const link = document.getElementById('ef-mat-link').value.trim();
+  const description = document.getElementById('ef-mat-desc').value.trim();
+  if (!title) return showToast(t('materials.errTitle'), 'error');
+  materialsDraft.push({ id: uuid(), title, link, description, createdAt: nowIso() });
+  document.getElementById('ef-mat-title').value = '';
+  document.getElementById('ef-mat-link').value = '';
+  document.getElementById('ef-mat-desc').value = '';
+  renderMaterialsDraft();
 }
 
 function renderLmsCourseList() {
@@ -165,7 +208,11 @@ function handleSubmit(e) {
 
   const groupingEnabled = document.getElementById('ef-grouping').checked;
   const { groupCount, groupSize } = deriveGroupConfig(selectedRoster.people.length, groupingEnabled);
-  const earlyBirdCount = Math.max(1, Math.round(selectedRoster.people.length / 4));
+  const earlyBirdFeatureOn = document.getElementById('ef-feat-earlyBird').checked;
+  const earlyBirdCountInput = Number(document.getElementById('ef-earlybird-count').value);
+  const earlyBirdCount = earlyBirdFeatureOn && earlyBirdCountInput > 0
+    ? earlyBirdCountInput
+    : Math.max(1, Math.round(selectedRoster.people.length / 4));
 
   // 模擬名單裡已預先「報到」的示範資料，在活動正式建立前就先算好分組配位與
   // 早鳥資格——這裡的計算結果會直接包在 addEvent() 的單次寫入裡一起存進
@@ -197,6 +244,8 @@ function handleSubmit(e) {
     earlyBirdCount,
     roster,
     nextAssignSeq: groupAssignState.nextAssignSeq,
+    materials: document.getElementById('ef-feat-materials').checked ? materialsDraft : [],
+    survey: { link: document.getElementById('ef-feat-survey').checked ? document.getElementById('ef-survey-link').value.trim() : '', sentAt: null },
     updatedAt: nowIso(),
   });
 
@@ -237,6 +286,14 @@ export function initEventsScreen({ onEventChanged } = {}) {
   });
 
   document.getElementById('event-form').addEventListener('submit', handleSubmit);
+
+  ['materials', 'survey', 'earlyBird', 'lottery'].forEach(feature => {
+    document.getElementById(`ef-feat-${feature}`).addEventListener('change', e => {
+      toggleFeatureDetail(feature, e.target.checked);
+    });
+  });
+  document.getElementById('ef-mat-add').addEventListener('click', addMaterialDraft);
+  renderMaterialsDraft();
 
   renderBrowseList();
 }
