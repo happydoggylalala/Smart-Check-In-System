@@ -15,11 +15,7 @@ function renderContentShell() {
     <div class="panel">
       <h3>${t('lottery.managePrizesHeading')}</h3>
       <div id="lottery-prize-manage-list"></div>
-      <div class="form-grid">
-        <label><span>${t('lottery.fieldPrizeName')}</span><input id="lot-prize-name" type="text"></label>
-        <label><span>${t('lottery.fieldPrizeQuantity')}</span><input id="lot-prize-qty" type="number" min="1" value="1"></label>
-      </div>
-      <button id="lot-prize-add" class="btn-secondary">${t('lottery.addPrizeBtn')}</button>
+      <button id="lot-prize-add" type="button" class="btn-secondary add-prize-button">${t('lottery.addPrizeBtn')}</button>
     </div>
     <div class="panel lottery-panel">
       <label><span>${t('lottery.selectPrizeLabel')}</span>
@@ -43,21 +39,28 @@ function renderContentShell() {
 
 function renderPrizeManageList(event) {
   const container = document.getElementById('lottery-prize-manage-list');
-  if (event.lotteryPrizes.length === 0) {
-    container.innerHTML = `<p class="hint">${t('lottery.noPrizesYet')}</p>`;
-    return;
-  }
-  container.innerHTML = event.lotteryPrizes.map(p => `
-    <div class="draft-list-item">
-      <div><strong>${escapeHtml(p.name)}</strong> · ${t('lottery.prizeProgress', { drawn: p.drawnCount, quantity: p.quantity })}</div>
-      <button type="button" class="btn-danger-outline" data-id="${p.id}">${t('lottery.deletePrizeBtn')}</button>
+  const eventId = event.id;
+  container.innerHTML = event.lotteryPrizes.map((p, index) => `
+    <div class="prize-row">
+      <label><span>${t('lottery.fieldPrizeName')} ${index + 1}</span><input type="text" data-field="name" data-id="${p.id}" value="${escapeHtml(p.name)}"></label>
+      <label><span>${t('lottery.fieldPrizeQuantity')} · ${t('lottery.prizeProgress', { drawn: p.drawnCount, quantity: p.quantity })}</span><input type="number" min="1" data-field="quantity" data-id="${p.id}" value="${p.quantity}"></label>
+      ${event.lotteryPrizes.length > 1 ? `<button type="button" class="prize-remove" data-remove-id="${p.id}" aria-label="${t('lottery.removePrizeBtn')}">✕</button>` : '<span></span>'}
     </div>
-  `).join('');
-  container.querySelectorAll('button[data-id]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      updateEvent(getActiveEventId(), ev => {
-        ev.lotteryPrizes = ev.lotteryPrizes.filter(p => p.id !== btn.dataset.id);
+  `).join('') || `<p class="hint">${t('lottery.noPrizesYet')}</p>`;
+  container.querySelectorAll('input[data-field]').forEach(input => {
+    input.addEventListener('change', () => {
+      updateEvent(eventId, ev => {
+        const prize = ev.lotteryPrizes.find(p => p.id === input.dataset.id);
+        if (!prize) return;
+        if (input.dataset.field === 'name') prize.name = input.value.trim();
+        else prize.quantity = Math.max(prize.drawnCount, 1, Number(input.value) || 1);
       });
+      render();
+    });
+  });
+  container.querySelectorAll('button[data-remove-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      updateEvent(eventId, ev => { ev.lotteryPrizes = ev.lotteryPrizes.filter(p => p.id !== btn.dataset.removeId); });
       render();
     });
   });
@@ -106,11 +109,7 @@ function renderHistory(event) {
 }
 
 function addPrize() {
-  const name = document.getElementById('lot-prize-name').value.trim();
-  const quantity = Number(document.getElementById('lot-prize-qty').value);
-  if (!name) return showToast(t('lottery.errPrizeName'), 'error');
-  if (!quantity || quantity < 1) return showToast(t('lottery.errPrizeQuantity'), 'error');
-  const prize = { id: uuid(), name, quantity, drawnCount: 0 };
+  const prize = { id: uuid(), name: '', quantity: 1, drawnCount: 0 };
   updateEvent(getActiveEventId(), ev => { ev.lotteryPrizes.push(prize); });
   selectedPrizeId = prize.id;
   render();

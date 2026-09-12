@@ -261,6 +261,17 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
 .feature-detail { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); }
 .draft-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; margin-top: 8px; font-size: 13px; }
 
+/* ---------- Prize rows (early bird / lottery) ---------- */
+.prize-row { display: grid; grid-template-columns: 1fr 120px 32px; align-items: end; gap: 10px; margin-top: 8px; }
+.prize-row:first-child { margin-top: 0; }
+.prize-remove {
+  width: 32px; height: 40px; border: 1px solid var(--danger); border-radius: 8px;
+  display: grid; place-items: center; color: var(--danger); background: transparent; cursor: pointer;
+}
+.prize-remove:hover { background: #fee2e2; }
+.add-prize-button { margin-top: 10px; width: 100%; justify-content: center; }
+@media (max-width: 560px) { .prize-row { grid-template-columns: 1fr; } }
+
 /* ---------- Event picker (Check-in Step A) ---------- */
 .event-pick-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .event-pick-card {

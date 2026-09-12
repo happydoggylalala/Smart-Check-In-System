@@ -74,6 +74,10 @@ function resetCreateFlow() {
 
 function toggleFeatureDetail(feature, checked) {
   document.getElementById(`ef-feat-${feature}-detail`).classList.toggle('hidden', !checked);
+  if (feature === 'lottery' && checked && lotteryPrizesDraft.length === 0) {
+    lotteryPrizesDraft.push({ id: uuid(), name: '', quantity: 1 });
+    renderLotteryPrizesDraft();
+  }
 }
 
 function renderMaterialsDraft() {
@@ -112,33 +116,32 @@ function addMaterialDraft() {
 }
 
 function renderLotteryPrizesDraft() {
-  const container = document.getElementById('ef-lottery-prize-list');
-  if (lotteryPrizesDraft.length === 0) {
-    container.innerHTML = `<p class="hint">${t('lottery.noPrizesYet')}</p>`;
-    return;
-  }
-  container.innerHTML = lotteryPrizesDraft.map(p => `
-    <div class="draft-list-item">
-      <div><strong>${escapeHtml(p.name)}</strong> · ${t('lottery.prizeQuantityLabel', { n: p.quantity })}</div>
-      <button type="button" class="btn-danger-outline" data-id="${p.id}">${t('materials.deleteBtn')}</button>
+  const container = document.getElementById('ef-lottery-prize-rows');
+  container.innerHTML = lotteryPrizesDraft.map((p, index) => `
+    <div class="prize-row">
+      <label><span>${t('lottery.fieldPrizeName')} ${index + 1}</span><input type="text" data-field="name" data-id="${p.id}" value="${escapeHtml(p.name)}"></label>
+      <label><span>${t('lottery.fieldPrizeQuantity')}</span><input type="number" min="1" data-field="quantity" data-id="${p.id}" value="${p.quantity}"></label>
+      ${lotteryPrizesDraft.length > 1 ? `<button type="button" class="prize-remove" data-remove-id="${p.id}" aria-label="${t('lottery.removePrizeBtn')}">✕</button>` : '<span></span>'}
     </div>
   `).join('');
-  container.querySelectorAll('button[data-id]').forEach(btn => {
+  container.querySelectorAll('input[data-field]').forEach(input => {
+    input.addEventListener('input', () => {
+      const prize = lotteryPrizesDraft.find(p => p.id === input.dataset.id);
+      if (!prize) return;
+      if (input.dataset.field === 'name') prize.name = input.value;
+      else prize.quantity = Number(input.value) || 1;
+    });
+  });
+  container.querySelectorAll('button[data-remove-id]').forEach(btn => {
     btn.addEventListener('click', () => {
-      lotteryPrizesDraft = lotteryPrizesDraft.filter(p => p.id !== btn.dataset.id);
+      lotteryPrizesDraft = lotteryPrizesDraft.filter(p => p.id !== btn.dataset.removeId);
       renderLotteryPrizesDraft();
     });
   });
 }
 
 function addLotteryPrizeDraft() {
-  const name = document.getElementById('ef-lp-name').value.trim();
-  const quantity = Number(document.getElementById('ef-lp-qty').value);
-  if (!name) return showToast(t('lottery.errPrizeName'), 'error');
-  if (!quantity || quantity < 1) return showToast(t('lottery.errPrizeQuantity'), 'error');
-  lotteryPrizesDraft.push({ id: uuid(), name, quantity, drawnCount: 0 });
-  document.getElementById('ef-lp-name').value = '';
-  document.getElementById('ef-lp-qty').value = '1';
+  lotteryPrizesDraft.push({ id: uuid(), name: '', quantity: 1 });
   renderLotteryPrizesDraft();
 }
 
@@ -281,7 +284,9 @@ function handleSubmit(e) {
     materials: document.getElementById('ef-feat-materials').checked ? materialsDraft : [],
     survey: { link: document.getElementById('ef-feat-survey').checked ? document.getElementById('ef-survey-link').value.trim() : '', sentAt: null },
     earlyBirdPrizeName: earlyBirdFeatureOn ? document.getElementById('ef-earlybird-prize').value.trim() : '',
-    lotteryPrizes: document.getElementById('ef-feat-lottery').checked ? lotteryPrizesDraft : [],
+    lotteryPrizes: document.getElementById('ef-feat-lottery').checked
+      ? lotteryPrizesDraft.filter(p => p.name.trim()).map(p => ({ id: p.id, name: p.name.trim(), quantity: Math.max(1, Number(p.quantity) || 1), drawnCount: 0 }))
+      : [],
     updatedAt: nowIso(),
   });
 
