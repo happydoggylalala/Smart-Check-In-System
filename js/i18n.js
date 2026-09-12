@@ -304,7 +304,7 @@ const dict = {
   'events.featuresHeading': { 'zh-TW': '模組化功能', en: 'Modular Features', 'zh-CN': '模块化功能', ja: 'モジュール機能' },
   'events.fieldEarlyBirdCount': { 'zh-TW': '早鳥名額人數', en: 'Early bird quota', 'zh-CN': '早鸟名额人数', ja: '早割枠人数' },
   'events.earlyBirdCountPlaceholder': { 'zh-TW': '預設為名單人數的 1/4', en: 'Defaults to 1/4 of the roster size', 'zh-CN': '默认为名单人数的 1/4', ja: '既定値は名簿人数の1/4です' },
-  'events.fieldEarlyBirdPrizeName': { 'zh-TW': '早鳥獎項名稱', en: 'Early bird prize name', 'zh-CN': '早鸟奖项名称', ja: '早割賞品名' },
+  'events.fieldEarlyBirdPrizeName': { 'zh-TW': '早鳥獎勵', en: 'Early bird prize name', 'zh-CN': '早鸟奖项名称', ja: '早割賞品名' },
   'events.earlyBirdPrizeNamePlaceholder': { 'zh-TW': '例如：星巴克飲料券', en: 'e.g. Starbucks voucher', 'zh-CN': '例如：星巴克饮料券', ja: '例：スターバックス券' },
   'events.lotteryDetailHint': { 'zh-TW': '活動建立後至「活動抽獎」頁面即可抽獎。可先在此設定獎項，之後也能再新增。', en: 'Draw winners from the Lottery page after the event is created. Prizes can be set up here now, or added later.', 'zh-CN': '活动建立后至「活动抽奖」页面即可抽奖。可先在此设置奖项，之后也能再新增。', ja: 'イベント作成後「抽選」ページで抽選できます。賞品は今ここで設定するか、後で追加することもできます。' },
   'events.materialsDraftEmpty': { 'zh-TW': '尚未新增教材', en: 'No materials added yet', 'zh-CN': '尚未新增教材', ja: 'まだ教材がありません' },
