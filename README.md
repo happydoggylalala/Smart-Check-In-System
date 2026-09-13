@@ -1,92 +1,92 @@
-# 智慧報到系統（多活動管理平台）
+# Smart Check-In System (Multi-Event Management Platform)
 
-純前端（無後端伺服器）的企業活動報到管理平台。可同時管理多場活動，每場活動可獨立設定報到規則、分組、與教材/早鳥福利/抽獎/問卷四個模組化功能。資料儲存在瀏覽器 localStorage。
+A pure front-end (no backend server) event check-in management platform for enterprises. It can manage multiple events at once, with each event independently configuring its check-in rules, grouping, and four modular features: materials / early bird rewards / lottery / survey. Data is stored in the browser's localStorage.
 
-介面風格與導覽架構參考自一個多活動報到平台範例網站重新設計，改為純前端、無登入/無後端的版本。
+The interface style and navigation structure were redesigned from reference of a multi-event check-in platform sample site, rebuilt as a pure front-end version with no login and no backend.
 
-## 功能總覽
+## Feature Overview
 
-- **活動管理**：新增/瀏覽/取消/刪除活動。每個活動可設定基本資料（名稱、主辦單位、時間、地點、類型、形式）、參加者名單（模擬名單或上傳 CSV）、是否需要分組、以及要啟用哪些模組化功能（教材/問卷/早鳥福利/抽獎）。
-- **智慧報到**：選擇活動後進入報到工作台，可切換「報到／簽退」模式與「刷卡／人工」模式。
-  - 刷卡模式支援 **USB 讀卡機（鍵盤模擬輸入）**：掃卡後自動以工號精準比對、立即完成報到/簽退，也提供快速模擬按鈕方便沒有實體讀卡機時展示。
-  - 人工模式可搜尋姓名/工號、手動報到/簽退，並支援現場非名單人員報到（現場候補）。
-  - 報到/簽退狀態判定：活動開始 15 分鐘內報到＝**準時**；15–30 分鐘內＝**遲到**；超過 30 分鐘＝**系統阻擋報到**並視為未到；結束前 30 分鐘內簽退＝**早退**（獨立疊加標記）。
-  - 即時 LIVE FEED 顯示最近報到/簽退紀錄。
-- **數據報表**：每場活動的即時出勤統計（應到/已報到/需追蹤/出席率）與可篩選（部門/組別/狀態）的完整名單，可標記請假、匯出 CSV。
-- **歷史紀錄**：查看已結束/已取消活動的唯讀報到紀錄。
-- **教材管理**：每場活動可自行新增教材連結清單。
-- **早鳥福利**：依報名時間排序前 N 名候選人，且**須準時報到**才真正取得早鳥資格——遲到、未到、尚未報到者即使排在前 N 名也不會拿到，也不會被後面名次遞補。
-- **活動抽獎**：對已報到人員現場抽獎，可排除已得獎者，並保留得獎歷史。
-- **問卷發送**：設定問卷連結後可一鍵發送給所有已報到人員（若該活動有設定 EmailJS 則真的寄信，否則模擬發送並記錄狀態）。
-- **多國語系**：右上角可即時切換繁體中文／English／简体中文／日本語，切換立即套用到全站含動態內容。
+- **Event Management**: Create/browse/cancel/delete events. Each event can configure basic info (name, organizer, time, location, type, format), the participant roster (mock roster or CSV upload), whether grouping is needed, and which modular features to enable (materials/survey/early bird/lottery).
+- **Smart Check-In**: After selecting an event, enter the check-in workbench, where you can switch between "Check-in/Check-out" mode and "Card/Manual" mode.
+  - Card mode supports a **USB card reader (keyboard-emulation input)**: after a scan, it matches the employee ID precisely and completes check-in/check-out instantly; quick simulation buttons are also provided for demos without a physical reader.
+  - Manual mode lets you search by name/employee ID, check in/out manually, and supports on-site walk-in registration for people not on the roster.
+  - Check-in/check-out status rules: checking in within 15 minutes of the event start = **on time**; 15–30 minutes = **late**; more than 30 minutes = **check-in blocked by the system** and treated as absent; checking out within 30 minutes before the event ends = **early leave** (an independent, stackable flag).
+  - A live feed shows the most recent check-in/check-out records in real time.
+- **Reports**: Real-time attendance statistics per event (expected/checked-in/needs follow-up/attendance rate) plus a filterable (department/group/status) full roster, with leave marking and CSV export.
+- **History**: Read-only check-in records for ended/cancelled events.
+- **Materials Management**: Each event can have its own list of material links added freely.
+- **Early Bird Rewards**: The earliest N registrants qualify, but only those who **check in on time** actually receive early-bird status — anyone late, absent, or not yet checked in loses it even if they were within the top N, and the slot is not backfilled by the next person in line.
+- **Event Lottery**: Draw winners on the spot from checked-in attendees, with an option to exclude previous winners, and a persisted winner history.
+- **Survey Sending**: Once a survey link is set, send it to all checked-in attendees with one click (actually emails if EmailJS is configured for that event, otherwise simulates sending and logs the status).
+- **Multi-language Support**: Instantly switch between Traditional Chinese / English / Simplified Chinese / Japanese from the top-right corner, applied immediately across the whole app including dynamic content.
 
-## 啟動方式
+## Getting Started
 
-因使用 ES modules（`<script type="module">`），**不能直接用瀏覽器開啟 `index.html`（file://）**，會被模組載入的 CORS 限制擋下。請用任一種免安裝的靜態伺服器啟動：
+Because this project uses ES modules (`<script type="module">`), **you cannot open `index.html` directly in the browser via `file://`** — it will be blocked by module-loading CORS restrictions. Use any install-free static server instead:
 
 ```bash
 npx serve .
-# 或
+# or
 python -m http.server 8000
 ```
 
-啟動後於瀏覽器開啟顯示的網址。
+Then open the URL it prints in your browser.
 
-## 使用流程
+## Usage Flow
 
-1. **活動管理**頁「新增活動」：填寫基本資料，名單選擇「模擬名單」快速展示，或上傳 CSV（欄位建議 `employee_id, name, department, email`，可用專案內 `sample-roster.csv` 測試），視需求開啟分組與模組化功能，送出。
-2. **智慧報到**頁選擇剛建立的活動，進「開始報到」工作台，用刷卡或人工方式報到/簽退。
-3. **數據報表**頁即時查看出勤狀況；活動結束後可在**歷史紀錄**頁查看唯讀紀錄。
-4. 依活動有無開啟對應功能，側邊欄會動態顯示**教材管理**／**早鳥福利**／**活動抽獎**／**問卷發送**。
+1. On the **Event Management** page, click "Create Event": fill in the basic info, choose a "mock roster" for a quick demo or upload a CSV (suggested columns: `employee_id, name, department, email`; you can test with the `sample-roster.csv` file included in the project), enable grouping and modular features as needed, then submit.
+2. On the **Smart Check-In** page, select the event you just created, enter the check-in workbench, and check people in/out via card or manual mode.
+3. Check attendance in real time on the **Reports** page; once the event has ended, view the read-only record on the **History** page.
+4. Depending on which features are enabled for the event, the sidebar dynamically shows **Materials Management** / **Early Bird Rewards** / **Event Lottery** / **Survey Sending**.
 
-## EmailJS 設定（問卷發送／報到講義寄送）
+## EmailJS Setup (Survey Sending / Handout Emails)
 
-1. 至 [emailjs.com](https://www.emailjs.com/) 免費註冊帳號，建立 Email Service 與 Template。
-2. Template 建議包含變數：`to_email`、`to_name`、`event_name`、`handout_link`、`group_seat`。
-3. 在**問卷發送**頁的「Email 寄送設定」區塊填入 Service ID / Template ID / Public Key，並勾選啟用；可用「測試寄送給自己」確認設定正確。
-4. 若未設定或寄送失敗，問卷發送流程仍會正常完成（視為模擬發送），不會卡住。
+1. Sign up for a free account at [emailjs.com](https://www.emailjs.com/) and create an Email Service and Template.
+2. The template should include these variables: `to_email`, `to_name`, `event_name`, `handout_link`, `group_seat`.
+3. On the **Survey Sending** page, fill in the Service ID / Template ID / Public Key in the "Email Delivery Settings" section and enable it; use "Send test email to myself" to confirm the setup works.
+4. If it's not configured or sending fails, the survey-sending flow still completes normally (treated as a simulated send) — it never gets stuck.
 
-## 重要設計取捨
+## Key Design Decisions
 
-- **純前端、無登入、無後端**：使用者頭像（Alex Wang）、左下角「系統連線正常 LMS·Email·RFID」、以及「從 LMS 選擇」的課程清單，皆為**裝飾性假資料**（`js/mockOrg.js`），不代表任何真實串接。
-- **單一裝置假設**：localStorage 僅存在單一瀏覽器，不會跨裝置同步。
-- **逾時報到直接阻擋**：超過活動開始 30 分鐘（可調整）後，系統不再允許報到，視為未到——這是明確選擇的規則。
-- **早鳥資格不遞補**：早鳥名額只跟報名順序有關，前 N 名中未準時報到者不會被後面名次的人遞補。
-- **座位超額不阻擋報到**：分組座位是自動輪流配位的輔助功能，超出規劃人數只會顯示提示徽章，不會阻擋報到；唯一會阻擋報到的規則是上述的逾時關卡，以及現場候補的活動人數上限關卡。
-- **教材/問卷為介面層級功能**：教材只存標題/連結/說明，無真實檔案上傳；問卷「發送」預設模擬（不寄信），只有該活動明確設定並啟用 EmailJS 才會真的寄出。
-- **CSV 匯入一律以 UTF-8 純文字讀取**：避免無 BOM 的 CSV 檔案被瀏覽器端函式庫誤判編碼導致中文亂碼（`.xlsx`/`.xls` 為二進位格式、不受影響，維持原本讀法）。
+- **Pure front-end, no login, no backend**: the logged-in user avatar (Winnie Chen), the "System connection normal · LMS · Email · RFID" status in the bottom-left corner, and the "Select from LMS" course list are all **decorative placeholder data** (`js/mockOrg.js`) and do not represent any real integration.
+- **Single-device assumption**: localStorage only exists in a single browser and does not sync across devices.
+- **Late check-in is hard-blocked**: after 30 minutes (configurable) past the event start, the system no longer allows check-in and treats the person as absent — this is a deliberate rule.
+- **Early-bird slots are not backfilled**: early-bird eligibility only depends on registration order; if someone in the top N doesn't check in on time, their slot is not passed down to the next person.
+- **Seat overflow never blocks check-in**: group seating is an auxiliary feature assigned round-robin; exceeding the planned headcount only shows a warning badge and never blocks check-in. The only rules that can block check-in are the late-check-in cutoff above and the event capacity cap for on-site walk-ins.
+- **Materials/Survey are interface-level features**: materials only store a title/link/description, with no real file upload; survey "sending" simulates by default (no email sent) — an event actually sends real emails only when EmailJS is explicitly configured and enabled for it.
+- **CSV import always reads as UTF-8 plain text**: this avoids browser-side libraries mis-detecting the encoding of a BOM-less CSV file and mangling Chinese characters (`.xlsx`/`.xls` are binary formats and are unaffected, so they keep their original read path).
 
-## 專案結構
+## Project Structure
 
 ```
-index.html                側邊欄版面外殼，載入 CDN 依賴與 js/app.js
-css/style.css               版面與樣式（側邊欄、活動卡片、報到工作台、表格等元件）
+index.html                Sidebar layout shell; loads CDN dependencies and js/app.js
+css/style.css               Layout and styles (sidebar, event cards, check-in workbench, tables, etc.)
 js/
-  app.js                     進入點，wiring 各畫面模組與語言切換重繪
-  state.js                    localStorage 讀寫（唯一存取點），schemaVersion 2
-  models.js                    資料模型工廠函式（活動、人員）
-  eventsStore.js                活動 CRUD 與狀態判定（進行中/即將開始/已結束/已取消）
-  session.js                     記憶體內的目前選定活動／報到工作台模式
-  mockOrg.js                      裝飾性假資料（使用者頭像、連線狀態、LMS假課程）
-  i18n.js                          四語系翻譯字典與核心函式
-  utils.js                         共用工具函式
-  sidebar.js / topHeader.js         側邊欄導覽（含動態功能項目）／頂部列（語言、頭像）
-  eventPicker.js                     活動搜尋/篩選/卡片渲染共用元件
-  eventsScreen.js                     活動管理頁（列表、新增活動精靈）
-  importRoster.js                     CSV/Excel 匯入純函式
-  demoData.js                         模擬名單產生器
-  grouping.js                          分組配位演算法
-  earlybird.js                         早鳥福利判定邏輯
-  checkinLogic.js                      報到/簽退核心狀態機（純邏輯）
-  checkinScreen.js                     智慧報到工作台畫面
-  waitlist.js                          現場候補邏輯
-  email.js                             EmailJS 寄信（講義／問卷）
-  rosterTable.js                       報表/歷史紀錄共用名單表格
-  reportsScreen.js                     數據報表頁
-  historyScreen.js                     歷史紀錄頁
-  materialsScreen.js                   教材管理頁
-  lotteryScreen.js                     活動抽獎頁
-  surveyScreen.js                      問卷發送頁
-  exportData.js                        CSV/Excel 匯出
-sample-roster.csv         測試用範例名單（employee_id, name, department, email）
+  app.js                     Entry point; wires up each screen module and re-renders on language switch
+  state.js                    localStorage read/write (the single access point), schemaVersion 2
+  models.js                    Data model factory functions (event, person)
+  eventsStore.js                Event CRUD and status resolution (ongoing/upcoming/ended/cancelled)
+  session.js                     In-memory currently-selected event / check-in workbench mode
+  mockOrg.js                      Decorative placeholder data (user avatar, connection status, mock LMS courses)
+  i18n.js                          Four-language translation dictionary and core functions
+  utils.js                         Shared utility functions
+  sidebar.js / topHeader.js         Sidebar navigation (with dynamic feature items) / top bar (language, avatar)
+  eventPicker.js                     Shared event search/filter/card-rendering component
+  eventsScreen.js                     Event management page (list, create-event wizard)
+  importRoster.js                     Pure CSV/Excel import functions
+  demoData.js                         Mock roster generator
+  grouping.js                          Group seat assignment algorithm
+  earlybird.js                         Early-bird eligibility logic
+  checkinLogic.js                      Core check-in/check-out state machine (pure logic)
+  checkinScreen.js                     Smart check-in workbench screen
+  waitlist.js                          On-site walk-in logic
+  email.js                             EmailJS sending (handouts / survey)
+  rosterTable.js                       Shared roster table for reports/history
+  reportsScreen.js                     Reports page
+  historyScreen.js                     History page
+  materialsScreen.js                   Materials management page
+  lotteryScreen.js                     Event lottery page
+  surveyScreen.js                      Survey sending page
+  exportData.js                        CSV/Excel export
+sample-roster.csv         Sample roster for testing (employee_id, name, department, email)
 ```
